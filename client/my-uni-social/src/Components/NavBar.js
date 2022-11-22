@@ -171,7 +171,7 @@ export default function NavBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, color: '#0d0d0d' }}
+            sx={{ display: { xs: 'none', sm: 'block' }, color: '#0d0d0d'}}
           >
             MUI
           </Typography>
