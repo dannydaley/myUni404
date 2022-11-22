@@ -173,7 +173,7 @@ export default function NavBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' }, color: '#0d0d0d'}}
           >
-            MUI
+            MyFalmouthSocial
           </Typography>
           <Search>
             <SearchIconWrapper>
