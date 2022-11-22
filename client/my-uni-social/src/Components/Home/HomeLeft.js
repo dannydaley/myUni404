@@ -11,8 +11,6 @@ export default function HomeLeft() {
                 <Button variant="contained" sx={{backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium">Module</Button>      
             </Stack>
             <Button variant="contained" sx={{backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}, justifySelf: 'flex-end', alignSelf: 'flex-end', marginTop: 'auto'}} size="medium">Falmouth myday</Button>   
-            </Container>
-            
-        
+            </Container>        
   );
 }
