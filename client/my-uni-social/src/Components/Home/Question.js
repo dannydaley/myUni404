@@ -7,7 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 import CodeBlock from '../CodeBlock';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ReplyIcon from '@mui/icons-material/Reply';
 
 
 export default function Question(props) {
@@ -15,34 +16,32 @@ export default function Question(props) {
     <div style={{marginBottom: '10px'}}>
           <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-          <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
-        <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-
-          {props.poster}
-          
-        </Typography>
+        <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'top'}}>
+          <img style={{border: '1px solid gray', width: '50px', height: '50px', borderRadius: '50%'}}/>
+          <Typography sx={{ fontSize: 15, textAlign: 'center', marginLeft: '7px' }} color="text.secondary">
+            {props.poster}  
+          </Typography>
         </div>
-
-        <Typography variant="h5" component="div">
-          {props.title}
-        </Typography>
-        <Typography variant="body2" sx={{textAlign: 'left'}}>
-          {props.question}
-          <CodeBlock codeString={ `<div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-          <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
-        <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-          <CodeBlock codestring={} />
-          {props.poster}
-          
-        </Typography>
-        </div>`} />
-        </Typography>
+        <div style={{width: '80%', marginLeft: 'auto'}}>
+          <Typography variant="h5" style={{textAlign: 'left'}}component="div">
+            {props.title}
+          </Typography>
+          <Typography variant="body2" sx={{textAlign: 'left'}}>
+            {props.question}
+          </Typography>
+        </div>
       </CardContent>
       <CardActions>
         <Button size="small">Read More</Button>
-        <Typography sx={{ mb: 1.5, marginLeft: 'auto' }} color="text.secondary">
-          {props.replies} replies
+        <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
+          <VisibilityIcon sx={{color: 'gray'}}/>
+            <Typography color="text.secondary" >           
+              10
+            </Typography>
+        </div>
+        <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
+        <Typography color="text.secondary" sx={{paddingRight: '15px'}}>          
+          {props.replies}
         </Typography>
       </CardActions>
     </Card>

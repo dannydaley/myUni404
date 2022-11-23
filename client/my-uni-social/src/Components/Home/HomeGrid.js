@@ -6,12 +6,13 @@ import Question from './Question';
 
 function HomeGrid() {
     return(
-        <Grid container spacing={3} sx={{height: '100vh', backgroundColor: '#333', marginTop: '0px'}}>
-            <Grid  width={'225px'}>
+        <Grid container spacing={3} sx={{backgroundColor: '#333', marginTop: '0px'}}>
+            <Grid width={'225px'}>
                 <HomeLeft />
             </Grid>
             <Grid xs={7}>
                 <div style={{padding: '20px'}}>
+                    {/* Map of questions passing in variables */}
                     <Question posterProfilePicture={'null'} poster={'Danny Daley'} title={'Is this code correct?'} question={'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'} number={1} replies={10} date={'23/11/2022'}/>
                     <Question posterProfilePicture={'null'} poster={'Danny Daley'} title={'Is this code correct?'} question={'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'} number={1} replies={10} date={'23/11/2022'}/>
                     <Question posterProfilePicture={'null'} poster={'Danny Daley'} title={'Is this code correct?'} question={'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'} number={1} replies={10} date={'23/11/2022'}/>
