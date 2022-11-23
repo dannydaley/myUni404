@@ -8,8 +8,8 @@ import SignInPage from './Pages/SignInPage';
 function App() {
   return (
     <div className="App">
-      {/* <HomePage /> */}
-      <SignInPage />
+      <HomePage />
+      {/* <SignInPage /> */}
     </div>
   );
 }
