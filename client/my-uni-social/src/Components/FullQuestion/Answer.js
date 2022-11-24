@@ -46,7 +46,7 @@ export default function Answer(props) {
                     <Typography color="text.secondary" >        
                     10
                     </Typography>
-                    <ArrowDownwardIcon sx={{color: 'gray', cursor: 'pointer', ':hover': {color: 'red'}}} />
+                    <ArrowDownwardIcon sx={{color: 'gray', cursor: 'pointer', ':hover': {color: 'red'}}} />                    
                 </div>
             </CardActions>
         </Box>

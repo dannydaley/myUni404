@@ -56,7 +56,7 @@ export default class CreateReply extends React.Component {
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '0 20px'}}>
                         <ArrowUpwardIcon style={{color: 'blue', cursor: 'pointer', alignSelf: 'flex-start' }}onClick={this.retractAnswer} />
                         <Button variant='contained' >Submit answer</Button>
-                        <div></div>
+                        <div style={{width: '30px'}}></div>
                     </div>                
                 </Card>        
                 <Divider sx={{marginTop: '10px'}} />        

@@ -11,9 +11,9 @@ function HomeGrid() {
                 <HomeLeft />
             </Grid>
             <Grid xs={6} sx={{margin: '0 auto'}}>
-                {/* <QuestionFeed /> */}
-                {/* <FullQuestion /> */}
-                {/* <Profile /> */}
+                <QuestionFeed />
+                <FullQuestion />
+                <Profile />
                 <AskQuestion />
             </Grid>
             {/* <Grid xs>
