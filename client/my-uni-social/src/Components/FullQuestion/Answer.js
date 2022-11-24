@@ -13,11 +13,10 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 export default function Answer(props) {
   return (
     <div style={{marginBottom: '10px'}}>
-        
-        <Card sx={{ minWidth: 275 }}>
+
+        <Box sx={{ minWidth: 275 }}>
 
             <CardContent>
-
                 <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                     <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                     <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
@@ -27,7 +26,7 @@ export default function Answer(props) {
                 </div>
 
                 <div >
-                    <Typography variant="body2" sx={{textAlign: 'left'}}>
+                    <Typography variant="body2" sx={{textAlign: 'left', marginTop: '30px'}}>
                         {props.text}
                         This could help fix your problem creating and deploying your docker image
                         <CodeBlock codeString={`# syntax=docker/dockerfile:1
@@ -49,19 +48,15 @@ export default function Answer(props) {
             <CardActions> 
 
                 <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
-                    <ArrowUpwardIcon sx={{color: 'gray', ':hover': {color: 'lightGreen'}}}/>   
+                    <ArrowUpwardIcon sx={{color: 'gray',  cursor: 'pointer',':hover': {color: 'lightGreen'}}}/>   
                     <Typography color="text.secondary" >        
                     10
                     </Typography>
-                    <ArrowDownwardIcon sx={{color: 'gray', ':hover': {color: 'red'}}} />
+                    <ArrowDownwardIcon sx={{color: 'gray', cursor: 'pointer', ':hover': {color: 'red'}}} />
                 </div>
 
             </CardActions>
-
-        </Card>
-
-        <Divider sx={{marginTop: '10px'}} />
-
+        </Box>
     </div>
   );
 }

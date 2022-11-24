@@ -16,14 +16,14 @@ import Answer from './Answer';
 
 export default function FullQuestion(props) {
   return (
-    <div style={{marginBottom: '10px'}}>
+    <div style={{margin: '20px 0'}}>
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
                 <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                     <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                     <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
                         {props.poster} 
-                        Danny Daley 
+                        poster name 
                     </Typography>
                     <CardActions sx={{marginLeft: 'auto'}}>
                     {/* <Button size="small">Read More</Button> */}
@@ -36,6 +36,7 @@ export default function FullQuestion(props) {
                       <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
                       <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
                           {props.replies}
+                          3
                       </Typography>
                     </CardActions>
                 </div>
@@ -47,52 +48,59 @@ export default function FullQuestion(props) {
                     {props.question}
                     'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'
                     <CodeBlock codeString={ `function createStyleObject(classNames, style) {
-  return classNames.reduce((styleObject, className) => {
-    return {...styleObject, ...style[className]};
-  }, {});
-}
+                        return classNames.reduce((styleObject, className) => {
+                          return {...styleObject, ...style[className]};
+                        }, {});
+                      }
 
-function createClassNameString(classNames) {
-  return classNames.join(' ');
-}
+                      function createClassNameString(classNames) {
+                        return classNames.join(' ');
+                      }
 
-/* this comment is here to demonstrate an extremely long line length, well beyond what you should probably allow in your own code, though sometimes you'll be highlighting code you can't refactor, which is unfortunate but should be handled gracefully
-*/
-funtion createChildren(style, useInlineStyles) {
-  let childrenCount = 0;
-  return children => {
-    childrenCount += 1;
-    return children.map((child, i) => createElement({
-      node: child,
-      style,
-      useInlineStyles,
-      key:\`code-segment-\${childrenCount}-\${i}\`
-    }));
-  }
-}
+                      /* this comment is here to demonstrate an extremely long line length, well beyond what you should probably allow in your own code, though sometimes you'll be highlighting code you can't refactor, which is unfortunate but should be handled gracefully
+                      */
+                      funtion createChildren(style, useInlineStyles) {
+                        let childrenCount = 0;
+                        return children => {
+                          childrenCount += 1;
+                          return children.map((child, i) => createElement({
+                            node: child,
+                            style,
+                            useInlineStyles,
+                            key:\`code-segment-\${childrenCount}-\${i}\`
+                          }));
+                        }
+                      }
 
-function createElement({ node, style, useInlineStyles, key }) {
-  const { properties, type, tagName, value } = node;
-  if (type === "text") {
-    return value;
-  } else if (tagName) {
-    const TagName = tagName;
-    const childrenCreator = createChildren(style, useInlineStyles);
-    const props = (
-      useInlineStyles
-      ? { style: createStyleObject(properties.className, style) }
-      : { className: createClassNameString(properties.className) }
-    );
-    const children = childrenCreator(node.children);
-    return <TagName key={key} {...props}>{children}</TagName>;
-  }
-}
-  `} />
+                      function createElement({ node, style, useInlineStyles, key }) {
+                        const { properties, type, tagName, value } = node;
+                        if (type === "text") {
+                          return value;
+                        } else if (tagName) {
+                          const TagName = tagName;
+                          const childrenCreator = createChildren(style, useInlineStyles);
+                          const props = (
+                            useInlineStyles
+                            ? { style: createStyleObject(properties.className, style) }
+                            : { className: createClassNameString(properties.className) }
+                          );
+                          const children = childrenCreator(node.children);
+                          return <TagName key={key} {...props}>{children}</TagName>;
+                        }
+                      }
+                        `} />
                 </Typography>
             </CardContent>
         </Card>
         <Divider sx={{marginTop: '10px'}} />
-        <Answer />
+        <Card>
+          <Typography sx={{ fontSize: 18, mt: 2 }} color="text.secondary" gutterBottom>
+            3 answers
+          </Typography>
+          <Answer />
+          <Divider />
+          <Answer />
+        </Card>       
         <CreateReply />
     </div>
   );

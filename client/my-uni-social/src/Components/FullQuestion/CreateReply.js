@@ -32,7 +32,7 @@ export default class CreateReply extends React.Component {
     render() {
         if (this.state.expanded){
                     return(
-            <div style={{marginBottom: '10px'}}>
+            <div style={{margin: '10px 0'}}>
             
                 <Card sx={{ minWidth: 275, pb: 2 }}>
         
@@ -77,7 +77,7 @@ export default class CreateReply extends React.Component {
         }
         else {
             return(
-                <div style={{marginBottom: '10px'}}>
+                <div style={{margin: '10px 0'}}>
             
                 <Card sx={{ minWidth: 275, pb: 2 }}>
         
@@ -90,32 +90,14 @@ export default class CreateReply extends React.Component {
                                 Logged in name
                             </Typography>
                         </div>
-                        {/* <Typography variant="h5" component="div" sx={{mb: 2}}>
-                    
-                    Answer this question
-                </Typography> */}
-        
-                        {/* <div>
-                            <textarea spellcheck="true" style={{width: '90%', minHeight: '200px', fontSize: '18pt', padding: '10px', marginBottom: '10px'}} />                            
-                            <Typography variant="h5" component="div" sx={{mb: 2}}>                    
-                                Add some code to your answer
-                            </Typography>
-                            <CodeEditor />
-                        </div> */}
         
                     </CardContent>
-                    <Button variant='contained' onClick={this.expandAnswer}>Answer this question</Button>
-        
-
-        
-                </Card>
-        
-                <Divider sx={{marginTop: '10px'}} />
-        
+                    <Button variant='contained' onClick={this.expandAnswer}>Answer this question</Button>        
+                </Card>        
+                <Divider sx={{marginTop: '10px'}} />        
             </div>
             )
         }
-
     }
 
 }

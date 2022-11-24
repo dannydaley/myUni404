@@ -42,6 +42,7 @@ export default function Question(props) {
         <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
         <Typography color="text.secondary" sx={{paddingRight: '15px'}}>          
           {props.replies}
+          3
         </Typography>
       </CardActions>
     </Card>
