@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import React from "react";
 import QuestionCard from '../Home/QuestionCard'
 
-
 class Profile extends React.Component {
     constructor() {
         super()
@@ -25,22 +24,21 @@ class Profile extends React.Component {
                 </div>
                 <div>
                     {this.state.feed === 'asked' ? 
-                            <div>
-                                <QuestionCard />
-                                <QuestionCard />
-                                <QuestionCard />
-                                <QuestionCard />
-                            </div>
-                        : 
-                            <div>
-                                <QuestionCard />
-                            </div>
+                        <div>
+                            <QuestionCard />
+                            <QuestionCard />
+                            <QuestionCard />
+                            <QuestionCard />
+                        </div>
+                    : 
+                        <div>
+                            <QuestionCard />
+                        </div>
                     }                 
                 </div>            
             </>
         )
     }
-
 }
 
 export default Profile;

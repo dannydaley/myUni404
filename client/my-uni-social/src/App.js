@@ -4,6 +4,7 @@ import NavBar from './Components/Home/NavBar';
 import HomeGrid from './Components/Home/HomeGrid';
 import HomePage from './Pages/HomePage';
 import SignInPage from './Pages/SignInPage';
+import AskQuestion from './Components/AskQuestion';
 
 function App() {
   return (

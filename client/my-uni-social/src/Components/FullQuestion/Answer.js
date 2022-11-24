@@ -13,9 +13,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 export default function Answer(props) {
   return (
     <div style={{marginBottom: '10px'}}>
-
         <Box sx={{ minWidth: 275 }}>
-
             <CardContent>
                 <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                     <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
@@ -24,8 +22,7 @@ export default function Answer(props) {
                         Replier name 
                     </Typography>
                 </div>
-
-                <div >
+                <div>
                     <Typography variant="body2" sx={{textAlign: 'left', marginTop: '30px'}}>
                         {props.text}
                         This could help fix your problem creating and deploying your docker image
@@ -42,11 +39,8 @@ export default function Answer(props) {
                             CMD ["flask", "run"]`} />
                     </Typography>
                 </div>
-
             </CardContent>
-
-            <CardActions> 
-
+            <CardActions>
                 <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
                     <ArrowUpwardIcon sx={{color: 'gray',  cursor: 'pointer',':hover': {color: 'lightGreen'}}}/>   
                     <Typography color="text.secondary" >        
@@ -54,7 +48,6 @@ export default function Answer(props) {
                     </Typography>
                     <ArrowDownwardIcon sx={{color: 'gray', cursor: 'pointer', ':hover': {color: 'red'}}} />
                 </div>
-
             </CardActions>
         </Box>
     </div>
