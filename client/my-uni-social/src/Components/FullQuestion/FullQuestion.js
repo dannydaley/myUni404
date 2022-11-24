@@ -9,6 +9,9 @@ import { Divider } from '@mui/material';
 import CodeBlock from '../CodeBlock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ReplyIcon from '@mui/icons-material/Reply';
+import QuestionCard from '../Home/QuestionCard'
+import CreateReply from './CreateReply'
+import Answer from './Answer';
 
 
 export default function FullQuestion(props) {
@@ -19,14 +22,30 @@ export default function FullQuestion(props) {
                 <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                     <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                     <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                        {props.poster}  
+                        {props.poster} 
+                        Danny Daley 
                     </Typography>
+                    <CardActions sx={{marginLeft: 'auto'}}>
+                    {/* <Button size="small">Read More</Button> */}
+                      <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
+                          <VisibilityIcon sx={{color: 'gray'}}/>
+                          <Typography color="text.secondary" >           
+                              10
+                          </Typography>
+                      </div>
+                      <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
+                      <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
+                          {props.replies}
+                      </Typography>
+                    </CardActions>
                 </div>
-                <Typography variant="h5" component="div">
+                <Typography variant="h5" component="div" sx={{mb: 2}}>
                     {props.title}
+                    'Is this code correct?'
                 </Typography>
                 <Typography variant="body2" sx={{textAlign: 'left'}}>
                     {props.question}
+                    'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'
                     <CodeBlock codeString={ `function createStyleObject(classNames, style) {
   return classNames.reduce((styleObject, className) => {
     return {...styleObject, ...style[className]};
@@ -71,21 +90,10 @@ function createElement({ node, style, useInlineStyles, key }) {
   `} />
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small">Read More</Button>
-                <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
-                    <VisibilityIcon sx={{color: 'gray'}}/>
-                    <Typography color="text.secondary" >           
-                        10
-                    </Typography>
-                </div>
-                <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
-                <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
-                    {props.replies}
-                </Typography>
-            </CardActions>
         </Card>
         <Divider sx={{marginTop: '10px'}} />
+        <Answer />
+        <CreateReply />
     </div>
   );
 }
