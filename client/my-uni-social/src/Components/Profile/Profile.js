@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material";
 import ProfileTop from "./ProfileTop";
 import Button from '@mui/material/Button';
 import React from "react";

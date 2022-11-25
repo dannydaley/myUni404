@@ -91,9 +91,12 @@ export default function FullQuestion(props) {
         </Card>
         <Divider sx={{marginTop: '10px'}} />
         <Card>
-          <Typography sx={{ fontSize: 18, mt: 2 }} color="text.secondary" gutterBottom>
+          
+          <Typography sx={{ fontSize: 18,  textAlign: 'center', margin: '20px auto 0'}} color="text.secondary" gutterBottom>
             3 answers
           </Typography>
+          
+
           <Answer />
           <Divider />
           <Answer />

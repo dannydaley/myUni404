@@ -29,7 +29,7 @@ class SignInForm extends React.Component
                 this.props.updateSession(firstName, lastName, username, profilePicture)
                 this.props.onRouteChange('home')  
     }
-
+    
     //Function triggers when component is mounted and looks for an active session.
     componentDidMount() {     
         fetch(process.env.SERVER + '/refreshSessionStatus', {
@@ -91,7 +91,9 @@ class SignInForm extends React.Component
                             </div>
                             <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>
                             <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                                <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}} onClick={()=>onRouteChange('signup')}>Sign Up</Button>        
+                                <Link to='/signup' style={{textDecoration: 'none'}}>
+                                    <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}>Sign Up</Button>  
+                                </Link>      
                             </div>
                         </Box>
                     </div>

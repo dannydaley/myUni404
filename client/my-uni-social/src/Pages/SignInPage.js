@@ -2,19 +2,21 @@ import SignInForm from "../Components/SignIn/SignInForm";
 import SignInLeft from "../Components/SignIn/SignInLeft";
 import Divider from '@mui/material/Divider';
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 export default class SignIn extends React.Component {
     
     
     render() {
-        let { onRouteChange, route, updateSession } = this.props;      
+        let { onRouteChange, updateSession } = this.props;      
     
         // if (route === 'signin' || route === 'signout'){        
             return (        
                 <div style={{backgroundColor: '#292929',display: 'flex', flexDirection: 'row', width: '100vw', height: '100vh',justifyContent: 'space-evenly', alignItems: 'center'}}>
                     <SignInLeft />
                     <Divider orientation="vertical" variant="middle" style={{height: '50%'}}/>
-                    <SignInForm onRouteChange={onRouteChange} updateSession={updateSession} />               
+                    <Outlet />
+                    {/* <SignInForm onRouteChange={onRouteChange} updateSession={updateSession} />                */}
                 </div>
             )   
         // } else if (route === 'signup'){

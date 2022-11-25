@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-
+import { Link } from 'react-router-dom';
 export default class SignUpForm extends React.Component 
   {
       constructor(props) {
@@ -64,7 +64,8 @@ export default class SignUpForm extends React.Component
 render() {
   const { onRouteChange } = this.props
   return (
-    <div style={{width: '30%', padding: '10ch',backgroundColor: 'white'}}>
+    
+    <div style={{width: '30%', padding: '10ch',backgroundColor: '#f5c732'}}>
         <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '30ch' } }} noValidate autoComplete="off">
             <form style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} >
               <TextField
@@ -75,16 +76,8 @@ render() {
                 label="Email Address"
                 placeholder="Email Address"
                 onChange={this.onEmailChange}
+                style={{backgroundColor: 'white'}}
               />  
-              <TextField
-                required
-                name="username"
-                id="outlined-required"
-                type="text"
-                label="Username"
-                placeholder="Username"
-                onChange={this.onUserNameChange}
-              />                 
               <TextField
                 required
                 name="firstName"
@@ -93,6 +86,7 @@ render() {
                 label="First name"
                 placeholder="first name"
                 onChange={this.onFirstNameChange}
+                style={{backgroundColor: 'white'}}
               />
               <TextField
                 required
@@ -102,6 +96,7 @@ render() {
                 label="Last name"
                 placeholder="last name"
                 onChange={this.onLastNameChange}
+                style={{backgroundColor: 'white'}}
               />
               <TextField
                 name="password"
@@ -111,6 +106,7 @@ render() {
                 autoComplete="off"
                 placeholder='create password'
                 onChange={this.onPasswordChange}
+                style={{backgroundColor: 'white'}}
               />
               <TextField
               name="confirmPassword"
@@ -120,15 +116,21 @@ render() {
                 autoComplete="off"
                 placeholder='repeat password'
                 onChange={this.onPasswordConfirmChange}
+                style={{backgroundColor: 'white'}}
               />
-              <Button variant="contained" sx={{width: '33ch', marginTop: '20px'}}  value="Sign Up" 
-                onClick={() => this.onSubmitSignUp()}
-                >Sign Up
-              </Button>
+              <Link to='/signin' style={{textDecoration: 'none'}}>
+                  <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}
+                    onClick={() => this.onSubmitSignUp()}>
+                      Sign Up
+                  </Button>  
+              </Link>   
+  
             </form>
             <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>
             <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                <Button variant="contained" sx={{width: '33ch'}} onClick={() => onRouteChange('signin')}>Sign In</Button>        
+              <Link to='/signin' style={{textDecoration: 'none'}}>
+                  <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}>Sign In</Button>  
+              </Link>    
             </div>
         </Box>
     </div>

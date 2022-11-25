@@ -36,7 +36,10 @@ export default function Question(props) {
           </div>
         </CardContent>
         <CardActions>
-          <Button size="small">Read More</Button>
+          <Link to='question' style={{textDecoration: 'none'}}>
+            <Button size="small">Read More</Button>
+          </Link>
+          
             <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
               <VisibilityIcon sx={{color: 'gray'}}/>
                 <Typography color="text.secondary" >           

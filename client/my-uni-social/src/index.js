@@ -1,12 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import logo from './logo.svg';
 import './App.css';
-import NavBar from './Components/Home/NavBar';
-import HomeGrid from './Components/Home/HomeGrid';
 import HomePage from './Pages/HomePage';
 import SignInPage from './Pages/SignInPage';
 import AskQuestion from './Components/AskQuestion';
@@ -16,16 +12,35 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import { useSlotProps } from '@mui/base';
-import Question from './Components/Home/QuestionCard';
+
 import FullQuestion from './Components/FullQuestion/FullQuestion';
 import AccountSettings from './Components/Account/AccountSettings';
 import QuestionFeed from './Components/Home/QuestionFeed';
+import SignInForm from './Components/SignIn/SignInForm';
+import SignUpForm from './Components/SignIn/SignUp';
 
 const router = createBrowserRouter([
   {
-    path: "/signin",
-    element: <SignInPage />,
+    path:  "",
+    element: <SignInPage />,    
+    children: [
+      {
+        path: "",
+        element: <SignInForm />
+      },
+      {
+        path: "/",
+        element: <SignInForm />
+      },
+      {
+        path: "signin",
+        element: <SignInForm />
+      },
+      {
+        path: "signup",
+        element: <SignUpForm />
+      }
+    ]
   },
   {
     path: "/home",

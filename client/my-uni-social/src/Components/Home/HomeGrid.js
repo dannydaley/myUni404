@@ -1,10 +1,5 @@
 import Grid from '@mui/material/Grid'; // Grid version 1
 import HomeLeft from './HomeLeft';
-import QuestionFeed from './QuestionFeed';
-import FullQuestion from '../FullQuestion/FullQuestion'
-import Profile from '../Profile/Profile';
-import AskQuestion from '../AskQuestion';
-import AccountSettings from '../Account/AccountSettings';
 import { Outlet } from 'react-router-dom';
 
 
@@ -16,11 +11,6 @@ function HomeGrid() {
             </Grid>
             <Grid xs={6} sx={{margin: '0 auto'}}>
                 <Outlet />
-                {/* <AccountSettings />
-                <QuestionFeed />
-                <FullQuestion /> */}
-                {/* <Profile /> */}
-                {/* <AskQuestion /> */}
             </Grid>
             {/* <Grid xs>
                 <div>xs</div>

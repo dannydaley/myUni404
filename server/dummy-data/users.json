@@ -1,0 +1,46 @@
+{
+    "entries": [
+        {
+            "userID": 1,
+            "firstName": "Danny",
+            "lastName": "Daley",
+            "email": "dd252935@falmouth.ac.uk",
+            "password": null,
+            "passwordSalt": null,
+            "aboutMe": "Hey everyone, Im Danny and I like answering coding questions!",
+            "course": "Web Development",
+            "year": 3,
+            "profilePicture": null,
+            "asked": 1,
+            "answered": 1
+        },
+        {
+            "userID": 2,
+            "firstName": "James",
+            "lastName": "Stevens",
+            "email": "js252935@falmouth.ac.uk",
+            "password": null,
+            "passwordSalt": null,
+            "aboutMe": "Hey everyone, Im Jimmy and I dont actually exist!",
+            "course": "Computer Science",
+            "year": 3,
+            "profilePicture": null,
+            "asked": 0,
+            "answered": 1
+        },
+        {
+            "userID": 3,
+            "firstName": "Robbie",
+            "lastName": "George",
+            "email": "rg252935@falmouth.ac.uk",
+            "password": null,
+            "passwordSalt": null,
+            "aboutMe": "Hey everyone, Im Robbie and I love HTML",
+            "course": "Computer Science",
+            "year": 1,
+            "profilePicture": null,
+            "asked": 1,
+            "answered": 0
+        }
+    ]
+}

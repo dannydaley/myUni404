@@ -3,7 +3,7 @@ const ProfileTop = () => {
     return(
         <div style={{backgroundColor: '#292929', width: '100%', color: 'whitesmoke'}}>
             <div style={{display: 'flex', padding: '0 20px', flexWrap: 'wrap'}}>
-                <img style={{minWidth: '120px', height: '120px', margin: '20px 50px 50px 0', border: '1px solid gray', borderRadius: '50%'}} />            
+                <img style={{minWidth: '120px', height: '120px', margin: '20px 50px 50px 0', border: '1px solid gray', borderRadius: '50%'}} alt="User profile-picture"/>            
                 <div style={{display: 'flex',justifyContent: 'space-between', width: '80%', flexWrap: 'wrap', margin: '0 auto'}}>
                     <h2>name</h2>
                     <div style={{marginTop: '70px', minWidth: '200px', maxWidth: '65%', textAlign: 'left'}}>

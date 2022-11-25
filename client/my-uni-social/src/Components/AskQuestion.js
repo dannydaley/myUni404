@@ -17,10 +17,10 @@ export default class AskQuestion extends React.Component {
 
     render() {
         return(
-            <div style={{margin: '10px 0'}}>            
-                <Card sx={{ minWidth: 275, pb: 2 }}>
-                    <form>
-                        <CardContent>                            
+            <div style={{margin: '10px'}}>            
+                <Card sx={{ minWidth: 275, pb: 2, margin: '0 auto'}}>
+                    <form syle={{margin: '0 auto'}}>
+                        <CardContent >                            
                             <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                                 <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                                 <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
@@ -28,14 +28,14 @@ export default class AskQuestion extends React.Component {
                                     Logged in name
                                 </Typography>
                             </div>
-                            <Typography variant="h5" component="div" sx={{mb: 0}}>                    
+                            <Typography variant="h5" component="div" sx={{margin: '30px auto 10px', textAlign: 'center'}} >                    
                                 Ask a question
                             </Typography>
                             <Typography variant="h7" component="div" sx={{mb: 2}}>                    
                                 Try to include as much detail as possible
                             </Typography>            
-                            <div style={{minHeight: '200px'}}>
-                                <textarea spellcheck="true" style={{width: '90%', minHeight: '200px', fontSize: '18pt', padding: '10px', marginBottom: '10px', maxWidth: '90%'}} />                            
+                            <div style={{minHeight: '200px', margin: '0 auto',display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                <textarea spellcheck="true" style={{width: '90%', minHeight: '200px', fontSize: '18pt', padding: '10px', margin: '0 auto 10px', maxWidth: '90%'}} />                            
                                 <Typography variant="h5" component="div" sx={{mb: 2}}>                    
                                     Add any code relevant to your question
                                 </Typography>
