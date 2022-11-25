@@ -15,6 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { Outlet, Link } from "react-router-dom";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -157,15 +158,15 @@ export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky" sx={{backgroundColor: '#f5c732', position: 'fixed', marginBottom: '50px'}}>
-        <Toolbar>
-          <IconButton
+        <Toolbar >
+          <IconButton 
             size="large"
             edge="start"
             color="#0d0d0d"
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon sx={{display: { md: 'none', xs: 'block' }}}/>
           </IconButton>
           <Typography
             variant="h6"

@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { Link } from 'react-router-dom';
 
 class SignInForm extends React.Component 
 {
@@ -80,11 +81,12 @@ class SignInForm extends React.Component
                                 onChange={this.onPasswordChange}
                                 sx={{backgroundColor: 'white'}}
                                 />
+                                <Link to={'/home'}>
                                 <Button variant="contained" sx={{width: '33ch', backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}        
                                 onSubmit={()=> this.onSubmitSignIn()}                            
                                 onClick={()=> this.onSubmitSignIn()}>
                                     Sign In
-                                </Button>
+                                </Button></Link>
                                 <p>Forgotten Password?</p>
                             </div>
                             <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>

@@ -9,6 +9,7 @@ import { Divider } from '@mui/material';
 import CodeBlock from '../CodeBlock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { Link } from 'react-router-dom';
 
 
 export default function Question(props) {
@@ -23,9 +24,12 @@ export default function Question(props) {
             </Typography>
           </div>
           <div style={{width: '80%', marginLeft: 'auto'}}>
+          <Link to={'question'}>          
             <Typography variant="h5" style={{textAlign: 'left'}}component="div">
               {props.title}
             </Typography>
+          </Link>
+
             <Typography variant="body2" sx={{textAlign: 'left'}}>
               {props.question}
             </Typography>
