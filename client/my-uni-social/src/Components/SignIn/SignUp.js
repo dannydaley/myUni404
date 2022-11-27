@@ -3,66 +3,67 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { Link } from 'react-router-dom';
-export default class SignUpForm extends React.Component 
-  {
-      constructor(props) {
-          super(props);
-          this.state = {
-              signUpEmail: '',
-              signUpFirstName: '',
-              signUpLastName: '',
-              signUpPassword: '',
-              confirmSignUpPassword: ''            
-          }
+import { Link, useNavigate } from 'react-router-dom';
+
+function SignUpForm() {
+
+
+      const navigate = useNavigate();
+
+
+      let signUpEmail;
+      // applies the email to state from the text field
+      const onEmailChange = (event) => {
+        signUpEmail = event.target.value
       }
 
-      // applies the email to state from the text field
-      onEmailChange = (event) => {
-        this.setState({signUpEmail: event.target.value})
-      }
+      let signUpFirstName;
+
       //applies first name to state from text field
-      onFirstNameChange = (event) => {
-        this.setState({signUpFirstName: event.target.value})
+      const onFirstNameChange = (event) => {
+        signUpFirstName = event.target.value
       }
+      let signUpLastName;
       //applies last name to state from text field
-      onLastNameChange = (event) => {
-        this.setState({signUpLastName: event.target.value})
+      const onLastNameChange = (event) => {
+        signUpLastName = event.target.value
       }
+      let signUpPassword;
       //applies password to state from text field
-      onPasswordChange = (event) => {
-        this.setState({signUpPassword: event.target.value})
+      const onPasswordChange = (event) => {
+        signUpPassword = event.target.value
       }
+      let confirmSignUpPassword;
       // applies password confirm to state from text field
-      onPasswordConfirmChange = (event) => {
-        this.setState({confirmSignUpPassword: event.target.value})
+      const onPasswordConfirmChange = (event) => {
+        confirmSignUpPassword = event.target.value
       }
 
     // function handles form submission and signup
-    onSubmitSignUp = () => {
-        fetch(process.env.REACT_APP_SERVER + '/signUp', {
+    const onSubmitSignUp = () => {
+        fetch('http://localhost:3001' + '/signUp', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                'signUpEmail': this.state.signUpEmail,
-                'signUpUserName': this.state.signUpUserName,
-                'signUpFirstName': this.state.signUpFirstName,
-                'signUpLastName': this.state.signUpLastName,
-                'signUpPassword': this.state.signUpPassword,
-                'confirmSignUpPassword': this.state.confirmSignUpPassword   
+                'signUpEmail': signUpEmail,
+                'signUpFirstName': signUpFirstName,
+                'signUpLastName': signUpLastName,
+                'signUpPassword': signUpPassword,
+                'confirmSignUpPassword': confirmSignUpPassword   
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {            
-                this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture);
+                // this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture);
+                navigate('/signin')
                 }
             }
-        ).then(this.props.onRouteChange('signin'))
+        )
+        // .then(this.props.onRouteChange('signin'))
     }
 
-render() {
-  const { onRouteChange } = this.props
+
   return (
     
     <div style={{width: '30%', padding: '10ch',backgroundColor: '#f5c732'}}>
@@ -75,7 +76,7 @@ render() {
                 type="email"
                 label="Email Address"
                 placeholder="Email Address"
-                onChange={this.onEmailChange}
+                onChange={onEmailChange}
                 style={{backgroundColor: 'white'}}
               />  
               <TextField
@@ -85,7 +86,7 @@ render() {
                 type="text"
                 label="First name"
                 placeholder="first name"
-                onChange={this.onFirstNameChange}
+                onChange={onFirstNameChange}
                 style={{backgroundColor: 'white'}}
               />
               <TextField
@@ -95,7 +96,7 @@ render() {
                 type="text"
                 label="Last name"
                 placeholder="last name"
-                onChange={this.onLastNameChange}
+                onChange={onLastNameChange}
                 style={{backgroundColor: 'white'}}
               />
               <TextField
@@ -105,7 +106,7 @@ render() {
                 type="password"
                 autoComplete="off"
                 placeholder='create password'
-                onChange={this.onPasswordChange}
+                onChange={onPasswordChange}
                 style={{backgroundColor: 'white'}}
               />
               <TextField
@@ -115,12 +116,12 @@ render() {
                 type="password"
                 autoComplete="off"
                 placeholder='repeat password'
-                onChange={this.onPasswordConfirmChange}
+                onChange={onPasswordConfirmChange}
                 style={{backgroundColor: 'white'}}
               />
               <Link to='/signin' style={{textDecoration: 'none'}}>
                   <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}
-                    onClick={() => this.onSubmitSignUp()}>
+                    onClick={() => onSubmitSignUp()}>
                       Sign Up
                   </Button>  
               </Link>   
@@ -135,8 +136,6 @@ render() {
         </Box>
     </div>
   );
-
-  }
-
-
 }
+
+export default SignUpForm;

@@ -5,61 +5,59 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, Router, useNavigate } from 'react-router-dom';
 
-class SignInForm extends React.Component 
-{
-    constructor(props) {
-        super(props);
-        this.state = {
-            signInEmail: '',
-            signInPassword: ''            
-        }
-    }
+function SignInForm() {
+
+    let signInEmail;
+    
+    let signInPassword;
+
+    const navigate = useNavigate();
     //Function controls email in field added to state
-    onEmailChange = (event) => {
-        this.setState({signInEmail: event.target.value})
+    const onEmailChange = (event) => {
+        signInEmail = event.target.value
     }
     //Function controls password in field added to state
-    onPasswordChange = (event) => {
-        this.setState({signInPassword: event.target.value})
+    const onPasswordChange = (event) => {
+        signInPassword = event.target.value
     }
     //Function controls applying session data to global state
-    applySession = (firstName, lastName, username, profilePicture) => {
-                this.props.updateSession(firstName, lastName, username, profilePicture)
-                this.props.onRouteChange('home')  
-    }
+    // const applySession = (firstName, lastName, username, profilePicture) => {
+    //             this.props.updateSession(firstName, lastName, username, profilePicture)
+    //             this.props.onRouteChange('home')  
+    // }
     
-    //Function triggers when component is mounted and looks for an active session.
-    componentDidMount() {     
-        fetch(process.env.SERVER + '/refreshSessionStatus', {
-          status: 'session-exists'
-        }).then(response => response.json())
-          .then(data => data.status === "session-exists" ? this.applySession(data.firstName, data.lastName, data.username, data.profilePicture) :''
-          )
-          }
+    // //Function triggers when component is mounted and looks for an active session.
+    // componentDidMount() {     
+    //     fetch(process.env.SERVER + '/refreshSessionStatus', {
+    //       status: 'session-exists'
+    //     }).then(response => response.json())
+    //       .then(data => data.status === "session-exists" ? this.applySession(data.firstName, data.lastName, data.username, data.profilePicture) :''
+    //       )
+    //       }
 
     //Function controls logging in and updates the session on success.
-    onSubmitSignIn = () => {
-        fetch(process.env.SERVER + '/signin', {
+    const onSubmitSignIn = () => {
+        fetch('http://localhost:3001'+ '/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                'email': this.state.signInEmail,
-                'password': this.state.signInPassword
+                'email': signInEmail,
+                'password': signInPassword
             })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'success') {            
-                this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture, data.coverPicture);
-                this.props.onRouteChange('home')}
+            console.log(data)
+            if (data.status === 'success') { 
+                // let navigate = useNavigate();           
+                // this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture, data.coverPicture);
+             navigate('/home')}
             }
         )
     }
-
-    render () { 
-        const { onRouteChange } = this.props;
+ 
             return (
                     <div style={{width: '30%', padding: '10ch',backgroundColor: '#f5c732'}}>
                         <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '30ch' } }} noValidate autoComplete="off">
@@ -70,7 +68,7 @@ class SignInForm extends React.Component
                                 type="email"
                                 label="Email Address"
                                 placeholder="Email Address"
-                                onChange={this.onEmailChange}
+                                onChange={onEmailChange}
                                 sx={{backgroundColor: 'white'}}
                                 />
                                 <TextField
@@ -78,15 +76,16 @@ class SignInForm extends React.Component
                                 label="Password"
                                 type="password"
                                 autoComplete="current-password"
-                                onChange={this.onPasswordChange}
+                                onChange={onPasswordChange}
                                 sx={{backgroundColor: 'white'}}
                                 />
-                                <Link to={'/home'}>
+                                
                                 <Button variant="contained" sx={{width: '33ch', backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}        
-                                onSubmit={()=> this.onSubmitSignIn()}                            
-                                onClick={()=> this.onSubmitSignIn()}>
+                                onSubmit={()=> onSubmitSignIn()}                            
+                                onClick={()=> onSubmitSignIn()}>
                                     Sign In
-                                </Button></Link>
+                                </Button>
+                                
                                 <p>Forgotten Password?</p>
                             </div>
                             <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>
@@ -98,7 +97,7 @@ class SignInForm extends React.Component
                         </Box>
                     </div>
                 );
-        }
+    
 }
 
 export default SignInForm;
