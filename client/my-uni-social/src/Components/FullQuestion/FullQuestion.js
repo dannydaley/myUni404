@@ -46,6 +46,7 @@ export default class FullQuestion extends React.Component {
     })
   }
   render() {
+    console.log('from fulklQ' + this.props.userData.userFirstName)    
     if (!this.state.contentLoaded) {
     return (    
       <div style={{margin: '20px 0'}}>
@@ -119,7 +120,7 @@ export default class FullQuestion extends React.Component {
             <Divider sx={{marginTop: '10px'}} />
             <Card>              
               <Typography sx={{ fontSize: 18,  textAlign: 'center', margin: '20px auto 0'}} color="text.secondary" gutterBottom>
-                {this.state.replyData.length} answers
+                {this.state.replyData.length} answer{this.state.replyData.length > 1 ? 's' : ''}
               </Typography>              
               { this.state.replyData.map(item => ( 
                 <>
@@ -128,7 +129,7 @@ export default class FullQuestion extends React.Component {
                 </>
               ))}
             </Card>       
-            <CreateReply />
+            <CreateReply userData={ this.props.userData }/>
         </div>
       )
     };

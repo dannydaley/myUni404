@@ -15,6 +15,7 @@ class HomePage extends React.Component {
         }
       }
 
+      loggedInEmail = '';
 //COMPONENT DID MOUNT IS BUILT IN AND RUNS WHEN THE COMPONENT MOUNTS
   componentDidMount = async () => {
     // this.setState({ settings: newSettings })   
@@ -30,7 +31,8 @@ class HomePage extends React.Component {
     .then(response => response.json())
     .then(await this.delayFunction())
     // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
-    .then(data => {    
+    .then(data => {  
+      this.loggedInEmail = data.email;  
       this.setState({ 
         loggedInEmail: data.email
       });
@@ -38,17 +40,15 @@ class HomePage extends React.Component {
   }
 
 render() {
-       
+      console.log('from homepage' + this.props.userData.userFirstName) 
     return(
         <div>
         <NavBar />
         
-        <HomeGrid  />
+        <HomeGrid  loggedInEmail={this.loggedInEmail} userData={this.props.userData}/>
         </div>
     )
-
-}
-
+  }
 }
 
 

@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid'; // Grid version 1
 import HomeLeft from './HomeLeft';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Routes, Route } from 'react-router-dom';
 import React from 'react';
 import QuestionFeed from './QuestionFeed';
 import FullQuestion from '../FullQuestion/FullQuestion';
@@ -27,15 +27,35 @@ class HomeGrid extends React.Component {
         this.setState({ questionInfo: { title: title, author: author, text: text, code: code, postID: postID }})
         }
 
-    render(props) {
+    render() {  
+        console.log('from homegrid' + this.props.userData.userFirstName)       
         return(
+
             <Grid container spacing={3} sx={{backgroundColor: '#333', marginTop: '60px'}}>
                 <Grid width={'225px'}>
-                    <HomeLeft changeRoute={this.changeRoute}/>
+                    <HomeLeft 
+                        changeRoute={this.changeRoute}
+                        userData={ this.props.userData } />
                 </Grid>
                 <Grid xs={6} sx={{margin: '0 auto'}}>
+                    {/* <Routes>
+                        <Route path="question"
+                        element={
+                            <FullQuestion
+                            title={this.state.questionInfo.title}
+                            author={this.state.questionInfo.author}
+                            text={this.state.questionInfo.text}
+                            code={this.state.questionInfo.code}
+                            postID={this.state.questionInfo.postID}
+                        />
+                        }
+                        />
+                        
+                    </Routes> */}
+                    <h1>{this.props.loggedInEmail}</h1>
                     {this.state.route === 'feed' ?
                         <QuestionFeed
+                        userData={ this.props.userData }
                             changeRoute={this.changeRoute}
                             readyQuestion={this.readyQuestion}
                         />
@@ -43,6 +63,7 @@ class HomeGrid extends React.Component {
                         ''}
                     {this.state.route === 'question' ?
                         <FullQuestion
+                            userData={ this.props.userData }
                             title={this.state.questionInfo.title}
                             author={this.state.questionInfo.author}
                             text={this.state.questionInfo.text}
@@ -52,7 +73,8 @@ class HomeGrid extends React.Component {
                     :
                          ''}
                     {this.state.route === 'ask' ?
-                        <AskQuestion />
+                        <AskQuestion 
+                            userData={ this.props.userData }/>
                     :
                         ''}
                     {/* <Outlet {...props}/> */}

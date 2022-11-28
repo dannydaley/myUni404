@@ -22,10 +22,10 @@ export default class AskQuestion extends React.Component {
                     <form syle={{margin: '0 auto'}}>
                         <CardContent >                            
                             <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-                                <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
+                                <img src={this.props.userData.userProfilePicture} style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                                 <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                                    {this.props.poster} 
-                                    Logged in name
+                                    {this.props.userData.userFirstName} {this.props.userData.userLastName}
+                                    
                                 </Typography>
                             </div>
                             <Typography variant="h5" component="div" sx={{margin: '30px auto 10px', textAlign: 'center'}} >                    

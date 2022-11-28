@@ -36,6 +36,7 @@ class QuestionFeed extends React.Component {
         <div style={{padding: '20px', margin: '0 auto'}}> 
         {this.state.feedData.map(item => (          
             <QuestionCard
+              userData={ this.props.userData }
               readyQuestion={this.props.readyQuestion}
               changeRoute={this.props.changeRoute}
               posterProfilePicture={item.profilePicture}

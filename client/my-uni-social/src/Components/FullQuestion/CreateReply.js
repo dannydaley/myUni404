@@ -9,8 +9,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CodeEditor from '../CodeEditor'
 
 export default class CreateReply extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state={
             expanded: false
         }
@@ -25,6 +25,7 @@ export default class CreateReply extends React.Component {
 
     input = 'This is the code input'
     render() {
+        console.log(this.props)
         if (this.state.expanded){
             return(
             <div style={{margin: '10px 0'}}>            
@@ -33,7 +34,7 @@ export default class CreateReply extends React.Component {
                         <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                             <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                             <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                                {this.props.poster} 
+                                
                                 Logged in name
                             </Typography>
                         </div>
@@ -65,8 +66,8 @@ export default class CreateReply extends React.Component {
                             <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
                                 <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
                                 <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                                    {this.props.poster} 
-                                    Logged in name
+                                    
+                                    poster name
                                 </Typography>
                             </div>        
                         </CardContent>

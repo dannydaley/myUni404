@@ -5,10 +5,10 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { Link, useNavigate } from 'react-router-dom';
 
-function SignUpForm() {
+function SignUpForm(props) {
 
 
-      const navigate = useNavigate();
+      
 
 
       let signUpEmail;
@@ -56,7 +56,7 @@ function SignUpForm() {
         .then(data => {
             if (data.status === 'success') {            
                 // this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture);
-                navigate('/signin')
+                props.changeRoute('signin')
                 }
             }
         )
@@ -128,10 +128,9 @@ function SignUpForm() {
   
             </form>
             <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>
-            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-              <Link to='/signin' style={{textDecoration: 'none'}}>
-                  <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}>Sign In</Button>  
-              </Link>    
+            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>             
+                  <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}
+                  onClick={() => props.changeRoute('signin')}>Sign In</Button>                
             </div>
         </Box>
     </div>

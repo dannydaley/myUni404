@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export default function HomeLeft(props) {
   return(
     <Container xs={0} sx={{padding: '20px', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', backgroundColor: '#292929' , width: 1, height: '94vh',   position: 'sticky', top: 0}}>
-      <img style={{width: '120px', height: '120px', marginBottom: '50px', border: '1px solid gray', borderRadius: '50%'}} />
+      <img src={props.userData.userProfilePicture} style={{width: '120px', height: '120px', marginBottom: '50px', border: '1px solid gray', borderRadius: '50%'}} />
         <Button variant="contained"
           sx={{backgroundColor: '#f5c732', mb: '50px','&:hover': {backgroundColor: 'gray'}}}
           size="medium"

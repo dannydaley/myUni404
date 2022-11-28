@@ -35,9 +35,9 @@ function SignInForm(props) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             if (data.status === 'success') {
-                navigate('/home', { loggedInUser: data.email, loggedInUser: data.firstName })}
+                props.setUserData(data.firstName, data.lastName, data.email, data.profilePicture, true)                
+                props.changeRoute('home')}
             }
         )
     } 
@@ -73,9 +73,10 @@ function SignInForm(props) {
                     </div>
                     <Divider variant="middle" style={{marginTop: '20px', marginBottom: '40px'}}/>
                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                        <Link to='/signup' style={{textDecoration: 'none'}}>
-                            <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}>Sign Up</Button>  
-                        </Link>      
+                        {/* <Link to='/signup' style={{textDecoration: 'none'}}> */}
+                            <Button variant="contained" sx={{width: '33ch',  backgroundColor: '#292929', '&:hover': { backgroundColor: 'gray'}}}
+                            onClick={() => props.changeRoute('signup')}>Sign Up</Button>  
+                        {/* </Link>       */}
                     </div>
                 </Box>
             </div>
