@@ -11,6 +11,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Route,
+  useLocation,
 } from "react-router-dom";
 
 import FullQuestion from './Components/FullQuestion/FullQuestion';
@@ -18,6 +19,17 @@ import AccountSettings from './Components/Account/AccountSettings';
 import QuestionFeed from './Components/Home/QuestionFeed';
 import SignInForm from './Components/SignIn/SignInForm';
 import SignUpForm from './Components/SignIn/SignUp';
+import { useSlotProps } from '@mui/base';
+
+let loggedInUser;
+
+const updateLoggedInUser = (email) => {
+  loggedInUser = email;  
+}
+
+let postData = [];
+
+const postInfo = (postDataIn) => postData = postDataIn
 
 const router = createBrowserRouter([
   {
@@ -26,7 +38,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <SignInForm />
+        element: <SignInForm updateLoggedInUser={updateLoggedInUser} />
       },
       {
         path: "/",
@@ -44,11 +56,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <HomePage />,
+    element: <HomePage loggedInUser={loggedInUser}/>,
     children: [
       {
         path: "feed",
-        element: <QuestionFeed />
+        element:<QuestionFeed loggedInUser={loggedInUser}/> 
       },
       {
         path: "ask",

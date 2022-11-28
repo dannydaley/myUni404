@@ -5,6 +5,7 @@ import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 // SyntaxHighlighter.registerLanguage('javascript', js);
  
 const CodeBlock = ({ codeString }) => {
+ 
   return (
     <SyntaxHighlighter language="javascript" style={a11yDark} showLineNumbers="true" wrapLongLines="true">
         {codeString}      

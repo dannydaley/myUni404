@@ -105,6 +105,10 @@ app.get('/usersSetup', (req, res) => {
 const GET_ALL_USERS = "SELECT * FROM users";
 const FIND_USER = "SELECT * FROM users WHERE email = ?";
 const SIGN_UP_USER = "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC"
+const GET_QUESTION_FEED = "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)"
+const GET_QUESTION_REPLIES = "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC"
+
 
 // get all users
 app.get('/getAllUsers', (req, res, next) => {
@@ -121,8 +125,95 @@ app.get('/getAllUsers', (req, res, next) => {
   });
 });
 
+app.get('/postsSetup', (req, res) => {
+  db.serialize(() => {
+    // delete any existing user table
+    db.run('DROP TABLE IF EXISTS `posts`'), (err) => {
+      if (err) {
+        console.log(err.message);
+      }
+    };
+    //rebuild the users table
+    db.run('CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))',
+       (err) => {
+      if (err) {
+        console.log(err.message)
+      }
+    });
+    let posts = postDataJSON.entries;
+    posts.forEach(post => {
+      db.run('INSERT INTO posts (author, authorID, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      // pass in values from the json objects
+      [post.author, post.authorID, post.date, post.category, post.score, post.relativePostID, post.title, post.text, post.code, post.language],
+         (err) => {
+        if (err) {
+          console.log(err.message)
+        }
+      })
+      });
+    })
+  console.log('posts table set up complete')
+  res.send('Posts table setup complete')
+});
+
+// get all users
+app.get('/getAllPosts', (req, res, next) => {
+  // grab all user data
+  db.all(GET_ALL_POSTS, [], (err, postData) => {
+    // if error
+    if (err) {
+      // respond with error status and error message
+      res.status(500).send(err.message);
+      return;
+    };
+    // respond with userData on success
+    res.send(postData);
+  });
+});
+
+// get all users
+app.post('/getQuestionFeed', (req, res, next) => {  
+  // grab all user data
+  //dont include 'reply' as title to not pull replies
+  let dontInclude = 'reply';
+  let category = req.body.feed;
+  db.all(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
+    // if error
+    if (err) {
+      // respond with error status and error message
+      res.status(500).send(err.message);
+      return;
+    };
+    // respond with userData on success
+     res.json(postData);
+  });
+});
+
+
+// get all users
+app.post('/getQuestionReplies', (req, res, next) => {
+  
+  // grab all user data
+  
+  let relativePostID = req.body.postID;
+  db.all(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
+    // if error
+    if (err) {
+      // respond with error status and error message
+      res.status(500).send(err.message);
+      return;
+    };
+    // respond with userData on success    
+    res.json(postData);
+  });
+});
+
+
 app.get('/', (req, res) => {
   res.send(`Server is running on port ${port}`)
+})
+
+app.post('/getSession', (req, res) => {
 })
 
 
@@ -190,16 +281,16 @@ app.post('/signin', (req, res) => {
       req.session.userData.isSignedIn = true;
       req.session.userData.userFirstName = user.firstName;
       req.session.userData.userLastName =  user.lastName;
-      req.session.userData.loggedInUsername = user.username;
       req.session.userData.userProfilePicture = user.profilePicture;
+      req.session.userData.email = user.email;
       //respond with user data on succesful login
       res.json({
         status: 'success',
         isSignedIn: req.session.userData.isSignedIn,
         firstName: req.session.userData.userFirstName,
         lastName: req.session.userData.userLastName,
-        username: req.session.userData.loggedInUsername,
-        profilePicture: req.session.userData.userProfilePicture
+        profilePicture: req.session.userData.userProfilePicture,
+        email: req.session.userData.email
       });
     // otherwise, credentials are invalid
     } else {

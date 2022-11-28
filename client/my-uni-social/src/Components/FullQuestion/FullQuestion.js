@@ -10,98 +10,128 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import CreateReply from './CreateReply'
 import Answer from './Answer';
 
+export default class FullQuestion extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contentLoaded: false,
+      replyData: []
+    }
+  }
 
-export default function FullQuestion(props) {
-  return (
-    <div style={{margin: '20px 0'}}>
-        <Card sx={{ minWidth: 275 }}>
-            <CardContent>
-                <div src={props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-                    <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
-                    <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                        {props.poster} 
-                        poster name 
-                    </Typography>
-                    <CardActions sx={{marginLeft: 'auto'}}>
-                    {/* <Button size="small">Read More</Button> */}
-                      <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
-                          <VisibilityIcon sx={{color: 'gray'}}/>
-                          <Typography color="text.secondary" >           
-                              10
-                          </Typography>
-                      </div>
-                      <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
-                      <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
-                          {props.replies}
-                          3
+  replyData = [];
+
+  delayFunction = async () => {
+    await this.delay(1000);
+  };
+
+  componentDidMount = async () => {
+    this.setState({ contentLoaded: false })  
+    // this.setState({ settings: newSettings })   
+    //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
+    fetch('http://localhost:3001' + '/getQuestionReplies', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        postID: this.props.postID
+      })    
+    })
+    //TURN THE RESPONSE INTO A JSON OBJECT
+    .then(response => response.json())
+    // .then(await this.delayFunction())
+    // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
+    .then(data => {    
+      this.setState({ replyData: data }); 
+      this.setState({ contentLoaded: true })
+    })
+  }
+  render() {
+    if (!this.state.contentLoaded) {
+    return (    
+      <div style={{margin: '20px 0'}}>
+          <Card sx={{ minWidth: 275 }}>
+              <CardContent>
+                  <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+                      <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
+                      <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>                        
+                          {this.props.author}                        
                       </Typography>
-                    </CardActions>
-                </div>
-                <Typography variant="h5" component="div" sx={{mb: 2}}>
-                    {props.title}
-                    'Is this code correct?'
-                </Typography>
-                <Typography variant="body2" sx={{textAlign: 'left'}}>
-                    {props.question}
-                    'My Docker compose isnt working properly, this is the code: fnsdjnvjsdfnjknsdjk'
-                    <CodeBlock codeString={ `function createStyleObject(classNames, style) {
-                        return classNames.reduce((styleObject, className) => {
-                          return {...styleObject, ...style[className]};
-                        }, {});
-                      }
+                      <CardActions sx={{marginLeft: 'auto'}}>
+                        <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
+                            <VisibilityIcon sx={{color: 'gray'}}/>
+                            <Typography color="text.secondary" >           
+                                10
+                            </Typography>
+                        </div>
+                        <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
+                        <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
+                            {this.props.replies}
+                            
+                        </Typography>
+                      </CardActions>
+                  </div>
+                  <Typography variant="h5" component="div" sx={{mb: 2}}>
+                      {this.props.title}
+                        </Typography>
+                  <Typography variant="body2" sx={{textAlign: 'left'}}>
+                      {this.props.text}
+                      
+                      <CodeBlock codeString={this.props.code} />
+                  </Typography>
+              </CardContent>
+          </Card>
+          <Divider sx={{marginTop: '10px'}} />  
+          <CreateReply />
+      </div>
+         )
+    } else if (this.state.contentLoaded) {
+      return (    
+        <div style={{margin: '20px 0'}}>
+            <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                    <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+                        <img style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
+                        <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>                        
+                            {this.props.author}                        
+                        </Typography>
+                        <CardActions sx={{marginLeft: 'auto'}}>
+                          <div style={{marginLeft: 'auto', display: 'flex', flexDirection: 'row', verticalAlign: 'center'}}>
+                              <VisibilityIcon sx={{color: 'gray'}}/>
+                              <Typography color="text.secondary" >           
+                                  10
+                              </Typography>
+                          </div>
+                          <ReplyIcon sx={{color: 'gray', paddingLeft: '5px'}}/>
+                          <Typography color="text.secondary" sx={{paddingRight: '15px'}}>
+                              {this.state.replyData.length}                              
+                          </Typography>
+                        </CardActions>
+                    </div>
+                    <Typography variant="h5" component="div" sx={{mb: 2}}>                     
+                        {this.props.title}
+                          </Typography>
+                    <Typography variant="body2" sx={{textAlign: 'left'}}>
+                        {this.props.text}                        
+                        <CodeBlock codeString={this.props.code} language={'html'}/>
+                    </Typography>
+                </CardContent>
+            </Card>
+            <Divider sx={{marginTop: '10px'}} />
+            <Card>              
+              <Typography sx={{ fontSize: 18,  textAlign: 'center', margin: '20px auto 0'}} color="text.secondary" gutterBottom>
+                {this.state.replyData.length} answers
+              </Typography>              
+              { this.state.replyData.map(item => ( 
+                <>
+                  <Answer author={item.author} text={item.text} code={item.code} score={item.score} language={item.language} />
+                  <Divider />
+                </>
+              ))}
+            </Card>       
+            <CreateReply />
+        </div>
+      )
+    };
+  }
 
-                      function createClassNameString(classNames) {
-                        return classNames.join(' ');
-                      }
-
-                      /* this comment is here to demonstrate an extremely long line length, well beyond what you should probably allow in your own code, though sometimes you'll be highlighting code you can't refactor, which is unfortunate but should be handled gracefully
-                      */
-                      funtion createChildren(style, useInlineStyles) {
-                        let childrenCount = 0;
-                        return children => {
-                          childrenCount += 1;
-                          return children.map((child, i) => createElement({
-                            node: child,
-                            style,
-                            useInlineStyles,
-                            key:\`code-segment-\${childrenCount}-\${i}\`
-                          }));
-                        }
-                      }
-
-                      function createElement({ node, style, useInlineStyles, key }) {
-                        const { properties, type, tagName, value } = node;
-                        if (type === "text") {
-                          return value;
-                        } else if (tagName) {
-                          const TagName = tagName;
-                          const childrenCreator = createChildren(style, useInlineStyles);
-                          const props = (
-                            useInlineStyles
-                            ? { style: createStyleObject(properties.className, style) }
-                            : { className: createClassNameString(properties.className) }
-                          );
-                          const children = childrenCreator(node.children);
-                          return <TagName key={key} {...props}>{children}</TagName>;
-                        }
-                      }
-                        `} />
-                </Typography>
-            </CardContent>
-        </Card>
-        <Divider sx={{marginTop: '10px'}} />
-        <Card>
-          
-          <Typography sx={{ fontSize: 18,  textAlign: 'center', margin: '20px auto 0'}} color="text.secondary" gutterBottom>
-            3 answers
-          </Typography>
-          
-
-          <Answer />
-          <Divider />
-          <Answer />
-        </Card>       
-        <CreateReply />
-    </div>
-  );
 }
