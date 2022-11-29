@@ -16,7 +16,13 @@ class Profile extends React.Component {
     render() {
         return (
             <>
-                <ProfileTop />
+                <ProfileTop
+                    loggedInEmail={this.props.loggedInEmail}
+                    userData={this.props.userData}
+                    userID={this.props.userID}
+                    userFirstName={this.props.userFirstName}
+                    userLastName={this.props.userLastName}
+                />
                 <div
                     style={{
                         display: "flex",

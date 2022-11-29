@@ -4,6 +4,7 @@ import React from "react";
 import QuestionFeed from "./QuestionFeed";
 import FullQuestion from "../FullQuestion/FullQuestion";
 import AskQuestion from "../AskQuestion";
+import Profile from "../Profile/Profile";
 
 class HomeGrid extends React.Component {
     constructor(props) {
@@ -127,6 +128,17 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "ask" ? (
                         <AskQuestion
+                            userData={this.props.userData}
+                            userID={this.props.userID}
+                            userFirstName={this.props.userFirstName}
+                            userLastName={this.props.userLastName}
+                        />
+                    ) : (
+                        ""
+                    )}
+                    {this.state.route === "myProfile" ? (
+                        <Profile
+                            loggedInEmail={this.props.loggedInEmail}
                             userData={this.props.userData}
                             userID={this.props.userID}
                             userFirstName={this.props.userFirstName}
