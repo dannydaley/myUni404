@@ -17,18 +17,32 @@ export default function HomeLeft(props) {
       <Stack spacing={2} direction="column" sx={{width: '80%', margin: '0 auto'}}>
         <Button variant="contained"
           sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}}
-          size="medium" onClick={() => props.changeRoute('feed')}>
+          size="medium" 
+          onClick={
+            () => props.changeFeed(1, 'Web')
+            }>
             Web
         </Button>
-        <Link to={'feed'} style={{textDecoration: 'none'}}>
-          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium">Game Dev</Button>
-        </Link> 
-        <Link to={'feed'} style={{textDecoration: 'none'}}>
-          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium">Systems/OS</Button>
-        </Link>
-        <Link to={'feed'} style={{textDecoration: 'none'}}>
-          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium">Robotics</Button>
-        </Link>
+        {/* <Link to={'feed'} style={{textDecoration: 'none'}}> */}
+          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium"
+          onClick={
+            () => props.changeFeed(2, 'GamDev')
+          }
+          >Game Dev</Button>
+        {/* </Link>  */}
+        {/* <Link to={'feed'} style={{textDecoration: 'none'}}> */}
+          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium"
+            onClick={
+              () => props.changeFeed(3, 'SysOs')
+              }>
+            Systems/OS</Button>
+        {/* </Link> */}
+        {/* <Link to={'feed'} style={{textDecoration: 'none'}}> */}
+          <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}}} size="medium"
+                    onClick={
+                      () => props.changeFeed(4, 'Robotics')
+                      }>Robotics</Button>
+        {/* </Link> */}
       </Stack>
       <a href="https://falmouth.myday.cloud/dashboard/home" target={'_blank'} style={{justifySelf: 'flex-end', alignSelf: 'flex-end', marginTop: 'auto', textDecoration: 'none'}}>
         <Button variant="contained" sx={{width: '100%', backgroundColor: '#f5c732', '&:hover': { backgroundColor: 'gray'}, justifySelf: 'flex-end', alignSelf: 'flex-end', marginTop: 'auto'}} size="medium">Falmouth myday</Button> 

@@ -36,7 +36,7 @@ function SignInForm(props) {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                props.setUserData(data.firstName, data.lastName, data.email, data.profilePicture, true)                
+                props.setUserData(data.userID, data.firstName, data.lastName, data.email, data.profilePicture, true)                
                 props.changeRoute('home')}
             }
         )

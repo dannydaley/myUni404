@@ -1,76 +1,215 @@
-
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Divider } from '@mui/material';
-import CodeEditor from './CodeEditor';
-
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { Divider } from "@mui/material";
+import CodeEditor from "./CodeEditor";
 
 export default class AskQuestion extends React.Component {
-    constructor() {
-        super();
-        this.state={            
-        }
+    constructor(props) {
+        super(props);
+        this.state = {
+            authorID: this.props.userID,
+            author: this.props.userFirstName + " " + this.props.userLastName,
+            title: "none",
+            text: "",
+            code: "",
+            language: "none",
+            category: "none",
+            shortSubmit: false,
+        };
     }
 
+    onTitleChange = (event) => this.setState({ title: event.target.value });
+    onTextChange = (event) => this.setState({ text: event.target.value });
+    onCodeChange = (event) => this.setState({ code: event.target.value });
+    onLanguageChange = (event) =>
+        this.setState({ language: event.target.value });
+    onCatChange = (event) => this.setState({ category: event.target.value });
+    //Function controls logging in and updates the session on success.
+    submitQuestion = () => {
+        if (
+            this.state.text.length < 50 ||
+            this.state.category === "none" ||
+            this.state.title === "none"
+        ) {
+            this.setState({ shortSubmit: true });
+        } else {
+            fetch("http://localhost:3001" + "/postQuestion", {
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    authorID: this.state.authorID,
+                    author: this.state.author,
+                    title: this.state.title,
+                    text: this.state.text,
+                    code: this.state.code,
+                    relativePostID: 0,
+                    language: this.state.language,
+                    category: this.state.category,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        this.props.changeRoute("feed");
+                    }
+                });
+        }
+    };
+
     render() {
-        return(
-            <div style={{margin: '10px'}}>            
-                <Card sx={{ minWidth: 275, pb: 2, margin: '0 auto'}}>
-                    <form syle={{margin: '0 auto'}}>
-                        <CardContent >                            
-                            <div src={this.props.posterProfilerPicture} style={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-                                <img src={this.props.userData.userProfilePicture} style={{border: '1px solid gray', width: '60px', height: '60px', borderRadius: '50%'}}/>
-                                <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                                    {this.props.userData.userFirstName} {this.props.userData.userLastName}
-                                    
+        return (
+            <div style={{ margin: "10px" }}>
+                <Card sx={{ minWidth: 275, pb: 2, margin: "0 auto" }}>
+                    <form syle={{ margin: "0 auto" }}>
+                        <CardContent>
+                            <div
+                                src={this.props.posterProfilerPicture}
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "baseline",
+                                }}
+                            >
+                                <img
+                                    alt="user profile pic"
+                                    src={this.props.userData.userProfilePicture}
+                                    style={{
+                                        border: "1px solid gray",
+                                        width: "60px",
+                                        height: "60px",
+                                        borderRadius: "50%",
+                                    }}
+                                />
+                                <Typography
+                                    sx={{ fontSize: 18 }}
+                                    color="text.secondary"
+                                    gutterBottom
+                                >
+                                    {this.props.userData.userFirstName}{" "}
+                                    {this.props.userData.userLastName}
                                 </Typography>
                             </div>
-                            <Typography variant="h5" component="div" sx={{margin: '30px auto 10px', textAlign: 'center'}} >                    
+                            <Typography
+                                variant="h5"
+                                component="div"
+                                sx={{
+                                    margin: "30px auto 10px",
+                                    textAlign: "center",
+                                }}
+                            >
                                 Ask a question
                             </Typography>
-                            <Typography variant="h7" component="div" sx={{mb: 2}}>                    
+                            <Typography
+                                variant="h7"
+                                component="div"
+                                sx={{ mb: 2 }}
+                            >
                                 Try to include as much detail as possible
-                            </Typography>            
-                            <div style={{minHeight: '200px', margin: '0 auto',display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <textarea spellcheck="true" style={{width: '90%', minHeight: '200px', fontSize: '18pt', padding: '10px', margin: '0 auto 10px', maxWidth: '90%'}} />                            
-                                <Typography variant="h5" component="div" sx={{mb: 2}}>                    
+                            </Typography>
+                            <input
+                                onChange={this.onTitleChange}
+                                type="text"
+                                style={{
+                                    height: "40px",
+                                    marginBottom: "10px",
+                                    width: "90%",
+                                }}
+                                placeholder="Write a title for your question"
+                            />
+                            <div
+                                style={{
+                                    minHeight: "200px",
+                                    margin: "0 auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <textarea
+                                    placeholder="Write the body of your question here"
+                                    spellcheck="true"
+                                    style={{
+                                        width: "90%",
+                                        minHeight: "200px",
+                                        fontSize: "18pt",
+                                        padding: "10px",
+                                        margin: "0 auto 10px",
+                                        maxWidth: "90%",
+                                    }}
+                                    onChange={this.onTextChange}
+                                />
+                                <Typography
+                                    variant="h5"
+                                    component="div"
+                                    sx={{ mb: 2 }}
+                                >
                                     Add any code relevant to your question
                                 </Typography>
-                                <CodeEditor />                            
-                            </div>            
+                                <CodeEditor onCodeChange={this.onCodeChange} />
+                            </div>
                         </CardContent>
-                        <div style={{display: 'flex', justifyContent: 'space-around', marginBottom: '50px'}}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                                marginBottom: "50px",
+                            }}
+                        >
                             <div>
                                 <h3>Category</h3>
-                                <select>
+                                <select onChange={this.onCatChange}>
                                     <option>Please Select</option>
-                                    <option>Web</option>
-                                    <option>Game Dev</option>
-                                    <option>System/OS</option>
-                                    <option>Robotics</option>
+                                    <option value={"Web"}>Web</option>
+                                    <option value={"GamDev"}>Game Dev</option>
+                                    <option value={"SysOS"}>System/OS</option>
+                                    <option value={"Robotics"}>Robotics</option>
                                 </select>
-                            </div>  
+                            </div>
                             <div>
                                 <h3>Language</h3>
-                                <select>
+                                <select onChange={this.onLanguageChange}>
                                     <option>Please Select</option>
-                                    <option>Javascript</option>
-                                    <option>C#</option>
-                                    <option>C++</option>
-                                    <option>HTML</option>
+                                    <option value={"javascript"}>
+                                        Javascript
+                                    </option>
+                                    <option value={"csharp"}>C#</option>
+                                    <option value={"cpp"}>C++</option>
+                                    <option value={"htmlbars"}>HTML</option>
                                 </select>
                             </div>
                         </div>
-                        <div style={{padding: '0 20px'}}> 
-                            <Button variant='contained'>Submit Question</Button>            
-                        </div>   
-                    </form>             
-                </Card>        
-                <Divider sx={{marginTop: '10px'}} />        
+                        {this.state.shortSubmit ? (
+                            <div
+                                style={{
+                                    width: "400px",
+                                    border: "2px solid red",
+                                    margin: "0 auto",
+                                    marginBottom: "20px",
+                                }}
+                            >
+                                <h2>
+                                    Your question is either missing a title, too
+                                    short or no category is selected
+                                </h2>
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                        <div style={{ padding: "0 20px" }}>
+                            <Button
+                                variant="contained"
+                                onClick={this.submitQuestion}
+                            >
+                                Submit Question
+                            </Button>
+                        </div>
+                    </form>
+                </Card>
+                <Divider sx={{ marginTop: "10px" }} />
             </div>
-        )
+        );
     }
 }

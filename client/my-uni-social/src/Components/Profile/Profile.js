@@ -1,42 +1,61 @@
 import ProfileTop from "./ProfileTop";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import React from "react";
-import QuestionCard from '../Home/QuestionCard'
+import QuestionCard from "../Home/QuestionCard";
 
 class Profile extends React.Component {
     constructor() {
-        super()
+        super();
         this.state = {
-            feed: 'asked'
-        }
+            feed: "asked",
+        };
     }
-    switchAsked = () => this.setState({feed: 'asked'})
-    switchAnswered = () => this.setState({feed: 'answered'})
+    switchAsked = () => this.setState({ feed: "asked" });
+    switchAnswered = () => this.setState({ feed: "answered" });
 
     render() {
-        return(
+        return (
             <>
                 <ProfileTop />
-                <div style={{display: 'flex', justifyContent: 'space-between', width: '300px', margin: '50px auto' }}>
-                    <Button variant="contained" sx={{width: '100px'}} onClick={this.switchAsked}>Asked</Button>
-                    <Button variant="contained" sx={{width: '100px'}} onClick={this.switchAnswered}>Answered</Button>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "300px",
+                        margin: "50px auto",
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        sx={{ width: "100px" }}
+                        onClick={this.switchAsked}
+                    >
+                        Asked
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ width: "100px" }}
+                        onClick={this.switchAnswered}
+                    >
+                        Answered
+                    </Button>
                 </div>
                 <div>
-                    {this.state.feed === 'asked' ? 
+                    {this.state.feed === "asked" ? (
                         <div>
                             <QuestionCard />
                             <QuestionCard />
                             <QuestionCard />
                             <QuestionCard />
                         </div>
-                    : 
+                    ) : (
                         <div>
                             <QuestionCard />
                         </div>
-                    }                 
-                </div>            
+                    )}
+                </div>
             </>
-        )
+        );
     }
 }
 
