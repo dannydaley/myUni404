@@ -91,6 +91,7 @@ class App extends React.Component {
                                 path="/"
                                 element={
                                     <HomePage
+                                    userProfilePicture={this.state.userProfilePicture}
                                         userData={this.state}
                                         userID={this.state.userID}
                                         userFirstName={this.state.userFirstName}

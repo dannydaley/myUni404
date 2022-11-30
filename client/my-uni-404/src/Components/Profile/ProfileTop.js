@@ -68,6 +68,7 @@ class ProfileTop extends React.Component {
                 >
                     <img
                         alt="User profile-pic"
+                        src={"http://localhost:3001/public/" + this.state.profilePicture}
                         style={{
                             minWidth: "120px",
                             height: "120px",

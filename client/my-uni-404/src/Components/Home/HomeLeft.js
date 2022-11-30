@@ -23,7 +23,7 @@ export default function HomeLeft(props) {
         >
             <img
                 alt=""
-                src={props.userData.userProfilePicture}
+                src={"http://localhost:3001/public/" + props.userData.userProfilePicture}
                 onClick={() => props.changeRoute("myProfile")}
                 style={{
                     width: "120px",

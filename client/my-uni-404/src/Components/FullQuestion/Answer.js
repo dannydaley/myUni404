@@ -13,7 +13,7 @@ export default function Answer(props) {
             <Box sx={{ minWidth: 275 }}>
                 <CardContent>
                     <div
-                        src={props.posterProfilerPicture}
+                        // src={"http://localhost:3001/public/" + props.posterProfilerPicture}
                         style={{
                             display: "flex",
                             flexDirection: "row",
@@ -21,6 +21,8 @@ export default function Answer(props) {
                         }}
                     >
                         <img
+                        alt=""
+                        src={"http://localhost:3001/public/" + props.authorProfilePicture}
                             style={{
                                 border: "1px solid gray",
                                 width: "60px",

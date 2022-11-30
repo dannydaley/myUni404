@@ -10,7 +10,7 @@
             "aboutMe": "Hey everyone, Im Danny and I like answering coding questions!",
             "course": "Web Development",
             "year": 3,
-            "profilePicture": "not set",
+            "profilePicture": "images/profilePictures/Daley-update-profile-picture-1640184634605-875098110.png",
             "asked": 1,
             "answered": 1
         },
@@ -24,7 +24,7 @@
             "aboutMe": "Hey everyone, Im Jimmy and I dont actually exist!",
             "course": "Computer Science",
             "year": 3,
-            "profilePicture": "not set",
+            "profilePicture": "images/defaultUser.png",
             "asked": 0,
             "answered": 1
         },
@@ -38,7 +38,7 @@
             "aboutMe": "Hey everyone, Im Robbie and I love HTML",
             "course": "Computer Science",
             "year": 1,
-            "profilePicture": "not set",
+            "profilePicture": "images/defaultUser.png",
             "asked": 1,
             "answered": 0
         }

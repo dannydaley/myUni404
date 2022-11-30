@@ -85,6 +85,8 @@ export default class CreateReply extends React.Component {
                                 }}
                             >
                                 <img
+                                alt=""
+                                src={"http://localhost:3001/public/" + this.props.userProfilePicture}
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -191,7 +193,8 @@ export default class CreateReply extends React.Component {
                                 }}
                             >
                                 <img
-                                    alt=""
+                                alt=""
+                                src={"http://localhost:3001/public/" + this.props.userProfilePicture}
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",

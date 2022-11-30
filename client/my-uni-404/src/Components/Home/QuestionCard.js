@@ -13,6 +13,7 @@ export default class Question extends React.Component {
     }
 
     goToQuestion = (
+        authorProfilePicture,
         title,
         author,
         question,
@@ -22,6 +23,7 @@ export default class Question extends React.Component {
         authorID
     ) => {
         this.props.readyQuestion(
+            authorProfilePicture,
             title,
             author,
             question,
@@ -45,7 +47,7 @@ export default class Question extends React.Component {
                             }}
                         >
                             <img
-                                src={this.props.posterProfilePicture}
+                                src={'http://localhost:3001/public/' + this.props.authorProfilePicture}
                                 alt=""
                                 style={{
                                     border: "1px solid gray",
@@ -75,6 +77,7 @@ export default class Question extends React.Component {
                                 component="div"
                                 onClick={() =>
                                     this.goToQuestion(
+                                        this.props.authorProfilePicture,
                                         this.props.title,
                                         this.props.poster,
                                         this.props.question,
@@ -100,6 +103,7 @@ export default class Question extends React.Component {
                             size="small"
                             onClick={() =>
                                 this.goToQuestion(
+                                    this.props.authorProfilePicture,
                                     this.props.title,
                                     this.props.poster,
                                     this.props.question,

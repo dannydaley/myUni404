@@ -15,6 +15,7 @@ class HomeGrid extends React.Component {
             viewProfile: 0,
             key: 1,
             questionInfo: {
+                authorProfilePicture: "",
                 title: "",
                 author: "",
                 text: "",
@@ -29,9 +30,10 @@ class HomeGrid extends React.Component {
 
     changeRoute = (route) => this.setState({ route: route });
 
-    readyQuestion = (title, author, text, code, postID, authorID) => {
+    readyQuestion = (authorProfilePicture, title, author, text, code, postID, authorID) => {
         this.setState({
             questionInfo: {
+                authorProfilePicture: authorProfilePicture,
                 title: title,
                 author: author,
                 text: text,
@@ -120,6 +122,8 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "question" ? (
                         <FullQuestion
+                        userProfilePicture={this.props.userProfilePicture}
+                        authorProfilePicture={this.state.questionInfo.authorProfilePicture}
                             viewProfile={this.viewProfile}
                             key={this.state.key}
                             userID={this.props.userID}
@@ -137,6 +141,7 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "ask" ? (
                         <AskQuestion
+                        userProfilePicture={this.props.userProfilePicture}
                             userData={this.props.userData}
                             userID={this.props.userID}
                             userFirstName={this.props.userFirstName}
@@ -147,6 +152,7 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "myProfile" ? (
                         <Profile
+                        userProfilePicture={this.props.userProfilePicture}
                             loggedInEmail={this.props.loggedInEmail}
                             userData={this.props.userData}
                             userID={this.props.userID}

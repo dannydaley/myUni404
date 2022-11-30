@@ -33,6 +33,7 @@ class HomePage extends React.Component {
         return (
             <div>
                 <HomeGrid
+                userProfilePicture={this.props.userProfilePicture}
                     loggedInEmail={this.loggedInEmail}
                     userData={this.props.userData}
                     userID={this.props.userID}

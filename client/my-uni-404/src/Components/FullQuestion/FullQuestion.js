@@ -57,7 +57,7 @@ export default class FullQuestion extends React.Component {
                     <Card sx={{ minWidth: 275 }}>
                         <CardContent>
                             <div
-                                src={this.props.posterProfilerPicture}
+                                
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
@@ -66,6 +66,7 @@ export default class FullQuestion extends React.Component {
                             >
                                 <img
                                     alt=""
+                                    src={"http://localhost:3001/public/" + this.props.authorProfilePicture}
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -142,7 +143,6 @@ export default class FullQuestion extends React.Component {
                     <Card sx={{ minWidth: 275 }}>
                         <CardContent>
                             <div
-                                src={this.props.posterProfilerPicture}
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
@@ -151,6 +151,7 @@ export default class FullQuestion extends React.Component {
                             >
                                 <img
                                     alt=""
+                                    src={"http://localhost:3001/public/" + this.props.authorProfilePicture}
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -238,6 +239,7 @@ export default class FullQuestion extends React.Component {
                                         code={item.code}
                                         score={item.score}
                                         language={item.language}
+                                        authorProfilePicture={item.authorProfilePicture}
                                     />
                                     <Divider />
                                 </>
@@ -247,6 +249,7 @@ export default class FullQuestion extends React.Component {
                         ""
                     )}
                     <CreateReply
+                        userProfilePicture={this.props.userProfilePicture}
                         refreshQuestion={this.refreshQuestion}
                         relativePostID={this.props.postID}
                         category={this.props.category}

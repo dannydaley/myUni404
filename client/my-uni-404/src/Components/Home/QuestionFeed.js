@@ -28,6 +28,7 @@ class QuestionFeed extends React.Component {
             // .then(await this.delayFunction())
             // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
+                console.log(data)
                 this.setState({ feedData: data });
             });
     };
@@ -43,7 +44,7 @@ class QuestionFeed extends React.Component {
                             readyQuestion={this.props.readyQuestion}
                             viewProfile={this.props.viewProfile}
                             changeRoute={this.props.changeRoute}
-                            posterProfilePicture={item.profilePicture}
+                            authorProfilePicture={item.authorProfilePicture}
                             poster={item.author}
                             authorID={item.authorID}
                             title={item.title}

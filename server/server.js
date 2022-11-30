@@ -161,7 +161,7 @@ app.get("/postsSetup", (req, res) => {
             };
         //rebuild the users table
         db.run(
-            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
+            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
             (err) => {
                 if (err) {
                     console.log(err.message);
@@ -171,11 +171,12 @@ app.get("/postsSetup", (req, res) => {
         let posts = postDataJSON.entries;
         posts.forEach((post) => {
             db.run(
-                "INSERT INTO posts (author, authorID, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO posts (author, authorID, authorProfilePicture, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
                     post.author,
                     post.authorID,
+                    post.authorProfilePicture,
                     post.date,
                     post.category,
                     post.score,
