@@ -16,26 +16,14 @@ app.get("/", function (req, res) {
 });
 
 // var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require("sqlite3").verbose();
+
+let db = new sqlite3.Database("./SQLite3.db");
 
 app.locals.db = db;
 
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
-
-let db = require("mysql");
-
-var db = mysql.createConnection({
-    host: process.env.DATABASEHOST,
-    port: process.env.DATABASEPORT,
-    user: process.env.DATABASEUSER,
-    password: process.env.DATABASEPASSWORD,
-    database: process.env.DATABASENAME,
-});
-
-db.connect(function (err) {
-    if (err) throw err;
-    console.log("Database Connected!");
-});
 
 // Session setup
 var session = require("cookie-session");
