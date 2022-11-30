@@ -1,3 +1,6 @@
+// FOR MYSQL CONVERSION FROM SQLITE 3, DB QUERIES CHANGE FROM .RUN, .GET , .SERIALIZE ETC TO .QUERY
+//  CHANGES IN TABLE CREATION: AUTOINCREMENT BECOMES AUTO_INCREMENT
+
 const express = require("express");
 const app = express();
 const port = 3001;
@@ -14,10 +17,6 @@ app.use(express.static(path.join(__dirname, "build")));
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
-
-// var sqlite3 = require("sqlite3").verbose();
-
-app.locals.db = db;
 
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
@@ -90,18 +89,45 @@ function passwordHash(thePassword, theSalt) {
 
 //#endregion SECURITY
 
+const GET_ALL_USERS = "SELECT * FROM `users`";
+const FIND_USER = "SELECT * FROM users WHERE email = ?";
+const SIGN_UP_USER =
+    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
+const GET_QUESTION_FEED =
+    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)";
+const GET_QUESTION_REPLIES =
+    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
+const POST_QUESTION =
+    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?)";
+
+// get all users
+app.get("/getAllUsers", (req, res, next) => {
+    // grab all user data
+    db.query(GET_ALL_USERS, [], (err, userData) => {
+        // if error
+        if (err) {
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with userData on success
+        res.send(userData);
+    });
+});
+
 app.get("/usersSetup", (req, res) => {
-    db.serialize(() => {
+    db.query(() => {
         // delete any existing user table
-        db.run("DROP TABLE IF EXISTS `users`"),
+        db.query("DROP TABLE IF EXISTS `users`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.run(
-            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTOINCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
+        db.query(
+            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTO_INCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
             // , firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER'
             (err) => {
                 if (err) {
@@ -111,7 +137,7 @@ app.get("/usersSetup", (req, res) => {
         );
         let users = userDataJSON.entries;
         users.forEach((user) => {
-            db.run(
+            db.query(
                 "INSERT INTO users (firstName, lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -140,45 +166,18 @@ app.get("/usersSetup", (req, res) => {
     res.send("Users table setup complete");
 });
 
-const GET_ALL_USERS = "SELECT * FROM users";
-const FIND_USER = "SELECT * FROM users WHERE email = ?";
-const SIGN_UP_USER =
-    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
-const GET_QUESTION_FEED =
-    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)";
-const GET_QUESTION_REPLIES =
-    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
-const POST_QUESTION =
-    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?)";
-
-// get all users
-app.get("/getAllUsers", (req, res, next) => {
-    // grab all user data
-    db.all(GET_ALL_USERS, [], (err, userData) => {
-        // if error
-        if (err) {
-            // respond with error status and error message
-            res.status(500).send(err.message);
-            return;
-        }
-        // respond with userData on success
-        res.send(userData);
-    });
-});
-
 app.get("/postsSetup", (req, res) => {
-    db.serialize(() => {
+    db.query(() => {
         // delete any existing user table
-        db.run("DROP TABLE IF EXISTS `posts`"),
+        db.query.query("DROP TABLE IF EXISTS `posts`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.run(
-            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
+        db.query(
+            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTO_INCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
             (err) => {
                 if (err) {
                     console.log(err.message);
@@ -187,7 +186,7 @@ app.get("/postsSetup", (req, res) => {
         );
         let posts = postDataJSON.entries;
         posts.forEach((post) => {
-            db.run(
+            db.query(
                 "INSERT INTO posts (author, authorID, authorProfilePicture, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -218,7 +217,7 @@ app.get("/postsSetup", (req, res) => {
 // get all users
 app.get("/getAllPosts", (req, res, next) => {
     // grab all user data
-    db.all(GET_ALL_POSTS, [], (err, postData) => {
+    db.query(GET_ALL_POSTS, [], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -236,7 +235,7 @@ app.post("/getQuestionFeed", (req, res, next) => {
     //dont include 'reply' as title to not pull replies
     let dontInclude = "reply";
     let category = req.body.feed;
-    db.all(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
+    db.query(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -253,7 +252,7 @@ app.post("/getQuestionReplies", (req, res, next) => {
     // grab all user data
 
     let relativePostID = req.body.postID;
-    db.all(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
+    db.query(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -295,7 +294,7 @@ app.post("/signUp", (req, res) => {
         let asked = 0;
         let answered = 0;
         //Create a new user in the user database with the fields from the form, the default profile picture and the generated password hash and salt
-        db.run(
+        db.query(
             SIGN_UP_USER,
             [
                 signUpFirstName,
@@ -341,7 +340,7 @@ app.post("/signin", (req, res) => {
     // pull data from request body for better readbility
     let { email, password } = req.body;
     // search if user exists using email address
-    db.get(FIND_USER, email, (err, userData) => {
+    db.query(FIND_USER, email, (err, userData) => {
         if (err) {
             console.log("error at database");
             res.status(500).send(err);
@@ -387,7 +386,7 @@ app.post("/signin", (req, res) => {
 app.post("/postQuestion", (req, res) => {
     let postData = req.body;
     console.log(req.body);
-    db.run(
+    db.query(
         POST_QUESTION,
         [
             postData.authorID,
@@ -419,7 +418,7 @@ app.post("/postQuestion", (req, res) => {
 app.post("/getProfile", (req, res) => {
     console.log(req.body);
     profileID = req.body.userID;
-    db.all(
+    db.query(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
         profileID,
         (err, rows) => {
