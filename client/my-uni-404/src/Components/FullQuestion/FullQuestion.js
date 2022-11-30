@@ -72,6 +72,11 @@ export default class FullQuestion extends React.Component {
                                         height: "60px",
                                         borderRadius: "50%",
                                     }}
+                                    onClick={() =>
+                                        this.props.viewProfile(
+                                            this.props.userID
+                                        )
+                                    }
                                 />
                                 <Typography
                                     sx={{ fontSize: 18 }}
@@ -152,6 +157,11 @@ export default class FullQuestion extends React.Component {
                                         height: "60px",
                                         borderRadius: "50%",
                                     }}
+                                    onClick={() =>
+                                        this.props.viewProfile(
+                                            this.props.viewProfile
+                                        )
+                                    }
                                 />
                                 <Typography
                                     sx={{ fontSize: 18 }}
@@ -221,6 +231,8 @@ export default class FullQuestion extends React.Component {
                             {this.state.replyData.map((item) => (
                                 <>
                                     <Answer
+                                        viewProfile={this.props.viewProfile}
+                                        authorID={item.authorID}
                                         author={item.author}
                                         text={item.text}
                                         code={item.code}

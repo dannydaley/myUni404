@@ -398,6 +398,29 @@ app.post("/postQuestion", (req, res) => {
     );
 });
 
+app.post("/getProfile", (req, res) => {
+    console.log(req.body);
+    profileID = req.body.userID;
+    db.all(
+        "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
+        profileID,
+        (err, rows) => {
+            if (err) {
+                console.log("Error at dabase");
+                console.log(err.message);
+                res.status(500).send(err.message);
+                return;
+            }
+            console.log(rows);
+            //respond with success
+            res.json({
+                status: "success",
+                userData: rows[0],
+            });
+        }
+    );
+});
+
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });

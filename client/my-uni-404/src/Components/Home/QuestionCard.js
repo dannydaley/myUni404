@@ -12,14 +12,23 @@ export default class Question extends React.Component {
         super(props);
     }
 
-    goToQuestion = (title, author, question, code, postID, language) => {
+    goToQuestion = (
+        title,
+        author,
+        question,
+        code,
+        postID,
+        language,
+        authorID
+    ) => {
         this.props.readyQuestion(
             title,
             author,
             question,
             code,
             postID,
-            language
+            language,
+            authorID
         );
         this.props.changeRoute("question");
     };
@@ -29,7 +38,6 @@ export default class Question extends React.Component {
                 <Card sx={{ minWidth: 275 }}>
                     <CardContent>
                         <div
-                            src={this.props.posterProfilePicture}
                             style={{
                                 display: "flex",
                                 flexDirection: "row",
@@ -37,6 +45,7 @@ export default class Question extends React.Component {
                             }}
                         >
                             <img
+                                src={this.props.posterProfilePicture}
                                 alt=""
                                 style={{
                                     border: "1px solid gray",
@@ -44,6 +53,9 @@ export default class Question extends React.Component {
                                     height: "50px",
                                     borderRadius: "50%",
                                 }}
+                                onClick={() =>
+                                    this.props.viewProfile(this.props.authorID)
+                                }
                             />
                             <Typography
                                 sx={{
@@ -68,7 +80,8 @@ export default class Question extends React.Component {
                                         this.props.question,
                                         this.props.code,
                                         this.props.postID,
-                                        this.props.language
+                                        this.props.language,
+                                        this.props.authorID
                                     )
                                 }
                             >
@@ -92,7 +105,8 @@ export default class Question extends React.Component {
                                     this.props.question,
                                     this.props.code,
                                     this.props.postID,
-                                    this.props.language
+                                    this.props.language,
+                                    this.props.authorID
                                 )
                             }
                         >

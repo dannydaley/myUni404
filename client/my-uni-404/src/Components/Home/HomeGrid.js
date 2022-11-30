@@ -12,19 +12,24 @@ class HomeGrid extends React.Component {
         this.state = {
             route: "feed",
             viewFeed: "Web",
+            viewProfile: 0,
             key: 1,
             questionInfo: {
                 title: "",
                 author: "",
                 text: "",
                 code: "",
+                postID: "",
             },
         };
     }
 
+    viewProfile = (num) =>
+        this.setState({ viewProfile: num, route: "profile" });
+
     changeRoute = (route) => this.setState({ route: route });
 
-    readyQuestion = (title, author, text, code, postID) => {
+    readyQuestion = (title, author, text, code, postID, authorID) => {
         this.setState({
             questionInfo: {
                 title: title,
@@ -32,6 +37,7 @@ class HomeGrid extends React.Component {
                 text: text,
                 code: code,
                 postID: postID,
+                authorID: authorID,
             },
         });
     };
@@ -49,6 +55,7 @@ class HomeGrid extends React.Component {
             >
                 <Grid width={"225px"}>
                     <HomeLeft
+                        userID={this.props.userID}
                         changeFeed={this.changeFeed}
                         changeRoute={this.changeRoute}
                         userData={this.props.userData}
@@ -106,12 +113,14 @@ class HomeGrid extends React.Component {
                             viewFeed={this.state.viewFeed}
                             changeRoute={this.changeRoute}
                             readyQuestion={this.readyQuestion}
+                            viewProfile={this.viewProfile}
                         />
                     ) : (
                         ""
                     )}
                     {this.state.route === "question" ? (
                         <FullQuestion
+                            viewProfile={this.viewProfile}
                             key={this.state.key}
                             userID={this.props.userID}
                             userFirstName={this.props.userFirstName}
@@ -141,6 +150,17 @@ class HomeGrid extends React.Component {
                             loggedInEmail={this.props.loggedInEmail}
                             userData={this.props.userData}
                             userID={this.props.userID}
+                            userFirstName={this.props.userFirstName}
+                            userLastName={this.props.userLastName}
+                        />
+                    ) : (
+                        ""
+                    )}
+                    {this.state.route === "profile" ? (
+                        <Profile
+                            loggedInEmail={this.props.loggedInEmail}
+                            userData={this.props.userData}
+                            userID={this.state.viewProfile}
                             userFirstName={this.props.userFirstName}
                             userLastName={this.props.userLastName}
                         />

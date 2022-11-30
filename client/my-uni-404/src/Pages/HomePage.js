@@ -30,7 +30,6 @@ class HomePage extends React.Component {
     // };
 
     render() {
-        console.log("from homepage" + this.props.userData.userFirstName);
         return (
             <div>
                 <HomeGrid

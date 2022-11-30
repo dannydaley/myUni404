@@ -41,9 +41,11 @@ class QuestionFeed extends React.Component {
                             userID={this.props.userID}
                             userData={this.props.userData}
                             readyQuestion={this.props.readyQuestion}
+                            viewProfile={this.props.viewProfile}
                             changeRoute={this.props.changeRoute}
                             posterProfilePicture={item.profilePicture}
                             poster={item.author}
+                            authorID={item.authorID}
                             title={item.title}
                             question={item.text}
                             code={item.code}
