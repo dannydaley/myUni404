@@ -11,6 +11,10 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use(express.static(path.join(__dirname, "build")));
 
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 var sqlite3 = require("sqlite3").verbose();
 
 let db = new sqlite3.Database("./SQLite3.db");
