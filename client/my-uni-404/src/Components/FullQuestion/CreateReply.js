@@ -212,9 +212,13 @@ export default class CreateReply extends React.Component {
                                 </Typography>
                             </div>
                         </CardContent>
-                        <Button variant="contained" onClick={this.expandAnswer}>
+                        <div style={{display: 'flex', justifyContent: 'center', alignContent: 'center', border: '2px solud red'}}>
+                        <Button variant="contained" sx={{margin: '0 auto'}} onClick={this.expandAnswer}>
                             Answer this question
                         </Button>
+                        </div>
+
+
                     </Card>
                     <Divider sx={{ marginTop: "10px" }} />
                 </div>
