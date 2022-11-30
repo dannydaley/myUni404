@@ -15,18 +15,16 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-var sqlite3 = require("sqlite3").verbose();
-
-let db = new sqlite3.Database("./SQLite3.db");
+// var sqlite3 = require("sqlite3").verbose();
 
 app.locals.db = db;
 
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
 
-let mysql = require("mysql");
+let db = require("mysql");
 
-var SQLdatabase = mysql.createConnection({
+var db = mysql.createConnection({
     host: process.env.DATABASEHOST,
     port: process.env.DATABASEPORT,
     user: process.env.DATABASEUSER,
@@ -34,7 +32,7 @@ var SQLdatabase = mysql.createConnection({
     database: process.env.DATABASENAME,
 });
 
-SQLdatabase.connect(function (err) {
+db.connect(function (err) {
     if (err) throw err;
     console.log("Database Connected!");
 });

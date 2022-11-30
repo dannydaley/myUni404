@@ -27,21 +27,6 @@ app.locals.db = db;
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
 
-let mysql = require("mysql");
-
-var SQLdatabase = mysql.createConnection({
-    host: process.env.DATABASEHOST,
-    port: process.env.DATABASEPORT,
-    user: process.env.DATABASEUSER,
-    password: process.env.DATABASEPASSWORD,
-    database: process.env.DATABASENAME,
-});
-
-SQLdatabase.connect(function (err) {
-    if (err) throw err;
-    console.log("Database Connected!");
-});
-
 // Session setup
 var session = require("cookie-session");
 var cookieParser = require("cookie-parser");
