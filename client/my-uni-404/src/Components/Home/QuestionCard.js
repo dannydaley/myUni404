@@ -47,7 +47,11 @@ export default class Question extends React.Component {
                             }}
                         >
                             <img
-                                src={'http://localhost:3001/public/' + this.props.authorProfilePicture}
+                                src={
+                                    process.env.REACT_APP_SERVER +
+                                    "/public/" +
+                                    this.props.authorProfilePicture
+                                }
                                 alt=""
                                 style={{
                                     border: "1px solid gray",

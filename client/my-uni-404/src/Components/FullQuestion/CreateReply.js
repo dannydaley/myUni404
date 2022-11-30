@@ -46,7 +46,7 @@ export default class CreateReply extends React.Component {
         ) {
             this.setState({ shortSubmit: true });
         } else {
-            fetch("http://localhost:3001" + "/postQuestion", {
+            fetch(process.env.REACT_APP_SERVER + "/postQuestion", {
                 method: "post",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -85,8 +85,12 @@ export default class CreateReply extends React.Component {
                                 }}
                             >
                                 <img
-                                alt=""
-                                src={"http://localhost:3001/public/" + this.props.userProfilePicture}
+                                    alt=""
+                                    src={
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.userProfilePicture
+                                    }
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -193,8 +197,12 @@ export default class CreateReply extends React.Component {
                                 }}
                             >
                                 <img
-                                alt=""
-                                src={"http://localhost:3001/public/" + this.props.userProfilePicture}
+                                    alt=""
+                                    src={
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.userProfilePicture
+                                    }
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -212,13 +220,22 @@ export default class CreateReply extends React.Component {
                                 </Typography>
                             </div>
                         </CardContent>
-                        <div style={{display: 'flex', justifyContent: 'center', alignContent: 'center', border: '2px solud red'}}>
-                        <Button variant="contained" sx={{margin: '0 auto'}} onClick={this.expandAnswer}>
-                            Answer this question
-                        </Button>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignContent: "center",
+                                border: "2px solud red",
+                            }}
+                        >
+                            <Button
+                                variant="contained"
+                                sx={{ margin: "0 auto" }}
+                                onClick={this.expandAnswer}
+                            >
+                                Answer this question
+                            </Button>
                         </div>
-
-
                     </Card>
                     <Divider sx={{ marginTop: "10px" }} />
                 </div>

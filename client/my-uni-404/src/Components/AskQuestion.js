@@ -36,7 +36,7 @@ export default class AskQuestion extends React.Component {
         ) {
             this.setState({ shortSubmit: true });
         } else {
-            fetch("http://localhost:3001" + "/postQuestion", {
+            fetch(process.env.REACT_APP_SERVER + "/postQuestion", {
                 method: "post",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

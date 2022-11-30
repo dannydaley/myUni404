@@ -23,7 +23,7 @@ class ProfileTop extends React.Component {
         this.setState({ contentLoaded: false });
         // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
-        fetch("http://localhost:3001" + "/getProfile", {
+        fetch(process.env.REACT_APP_SERVER + "/getProfile", {
             method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -68,7 +68,11 @@ class ProfileTop extends React.Component {
                 >
                     <img
                         alt="User profile-pic"
-                        src={"http://localhost:3001/public/" + this.state.profilePicture}
+                        src={
+                            process.env.REACT_APP_SERVER +
+                            "/public/" +
+                            this.state.profilePicture
+                        }
                         style={{
                             minWidth: "120px",
                             height: "120px",

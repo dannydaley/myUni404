@@ -21,8 +21,12 @@ export default function Answer(props) {
                         }}
                     >
                         <img
-                        alt=""
-                        src={"http://localhost:3001/public/" + props.authorProfilePicture}
+                            alt=""
+                            src={
+                                process.env.REACT_APP_SERVER +
+                                "/public/" +
+                                props.authorProfilePicture
+                            }
                             style={{
                                 border: "1px solid gray",
                                 width: "60px",

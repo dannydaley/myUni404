@@ -29,13 +29,16 @@ export default class FullQuestion extends React.Component {
         this.setState({ contentLoaded: false });
         // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
-        fetch("http://localhost:3001" + "/getQuestionReplies", {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                postID: this.props.postID,
-            }),
-        })
+        fetch(
+            process.env.REACT_APP_SERVER + "/public/" + "/getQuestionReplies",
+            {
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    postID: this.props.postID,
+                }),
+            }
+        )
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
             // .then(await this.delayFunction())
@@ -57,7 +60,6 @@ export default class FullQuestion extends React.Component {
                     <Card sx={{ minWidth: 275 }}>
                         <CardContent>
                             <div
-                                
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
@@ -66,7 +68,11 @@ export default class FullQuestion extends React.Component {
                             >
                                 <img
                                     alt=""
-                                    src={"http://localhost:3001/public/" + this.props.authorProfilePicture}
+                                    src={
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.authorProfilePicture
+                                    }
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -151,7 +157,11 @@ export default class FullQuestion extends React.Component {
                             >
                                 <img
                                     alt=""
-                                    src={"http://localhost:3001/public/" + this.props.authorProfilePicture}
+                                    src={
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.authorProfilePicture
+                                    }
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",
@@ -239,7 +249,9 @@ export default class FullQuestion extends React.Component {
                                         code={item.code}
                                         score={item.score}
                                         language={item.language}
-                                        authorProfilePicture={item.authorProfilePicture}
+                                        authorProfilePicture={
+                                            item.authorProfilePicture
+                                        }
                                     />
                                     <Divider />
                                 </>
