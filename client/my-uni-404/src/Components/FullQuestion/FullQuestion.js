@@ -29,16 +29,13 @@ export default class FullQuestion extends React.Component {
         this.setState({ contentLoaded: false });
         // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
-        fetch(
-            process.env.REACT_APP_SERVER + "/public/" + "/getQuestionReplies",
-            {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    postID: this.props.postID,
-                }),
-            }
-        )
+        fetch(process.env.REACT_APP_SERVER + "/getQuestionReplies", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                postID: this.props.postID,
+            }),
+        })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
             // .then(await this.delayFunction())

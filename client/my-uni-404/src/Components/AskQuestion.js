@@ -66,7 +66,6 @@ export default class AskQuestion extends React.Component {
                     <form syle={{ margin: "0 auto" }}>
                         <CardContent>
                             <div
-                                src={this.props.posterProfilerPicture}
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
@@ -75,7 +74,11 @@ export default class AskQuestion extends React.Component {
                             >
                                 <img
                                     alt="user profile pic"
-                                    src={this.props.userData.userProfilePicture}
+                                    src={
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.userData.userProfilePicture
+                                    }
                                     style={{
                                         border: "1px solid gray",
                                         width: "60px",

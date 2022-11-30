@@ -9,7 +9,7 @@ import SignUpForm from "./Components/SignIn/SignUp";
 
 class App extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             route: "signin",
             isSignedIn: false,
@@ -91,7 +91,9 @@ class App extends React.Component {
                                 path="/"
                                 element={
                                     <HomePage
-                                    userProfilePicture={this.state.userProfilePicture}
+                                        userProfilePicture={
+                                            this.state.userProfilePicture
+                                        }
                                         userData={this.state}
                                         userID={this.state.userID}
                                         userFirstName={this.state.userFirstName}

@@ -77,7 +77,6 @@ export default class CreateReply extends React.Component {
                     <Card sx={{ minWidth: 275, pb: 2 }}>
                         <CardContent>
                             <div
-                                src={this.props.posterProfilerPicture}
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
@@ -189,7 +188,6 @@ export default class CreateReply extends React.Component {
                     <Card sx={{ minWidth: 275, pb: 2 }}>
                         <CardContent>
                             <div
-                                src={this.props.posterProfilerPicture}
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
