@@ -21,7 +21,7 @@ app.get("/", function (req, res) {
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
 
-let db = require("mysql");
+let mysql = require("mysql");
 
 var db = mysql.createConnection({
     host: process.env.DATABASEHOST,
