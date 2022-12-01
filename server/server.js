@@ -425,7 +425,6 @@ app.post("/postQuestion", (req, res) => {
 });
 
 app.post("/getProfile", (req, res) => {
-    console.log(req.body);
     profileID = req.body.userID;
     db.all(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
@@ -437,7 +436,6 @@ app.post("/getProfile", (req, res) => {
                 res.status(500).send(err.message);
                 return;
             }
-            console.log(rows);
             //respond with success
             res.json({
                 status: "success",
@@ -474,6 +472,23 @@ app.post("/vote", (req, res) => {
     res.json({
         status: "success",
     });
+});
+
+app.post("/getUserQuestionFeed", (req, res) => {
+    let userID = req.body.userID;
+    db.all(
+        "SELECT * FROM `posts` WHERE `authorID` = ?",
+        userID,
+        (err, rows) => {
+            if (err) {
+                console.log(err.message);
+            }
+            res.json({
+                status: "success",
+                postData: rows,
+            });
+        }
+    );
 });
 
 app.listen(port, () => {

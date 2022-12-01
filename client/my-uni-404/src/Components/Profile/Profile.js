@@ -2,6 +2,7 @@ import ProfileTop from "./ProfileTop";
 import Button from "@mui/material/Button";
 import React from "react";
 import QuestionCard from "../Home/QuestionCard";
+import NoQuestions from "../Home/NoQuestions";
 
 class Profile extends React.Component {
     constructor() {
@@ -28,7 +29,8 @@ class Profile extends React.Component {
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
             .then((data) => {
-                this.setState({ feedData: data });
+                console.log(data);
+                this.setState({ feedData: data.postData });
             });
     };
 
@@ -68,15 +70,73 @@ class Profile extends React.Component {
                 <div>
                     {this.state.feed === "asked" ? (
                         <div>
-                            {}
-                            <QuestionCard />
-                            <QuestionCard />
-                            <QuestionCard />
-                            <QuestionCard />
+                            {this.state.feedData.length > 0 ? (
+                                this.state.feedData.map((item) =>
+                                    item.relativePostID === 0 ? (
+                                        <QuestionCard
+                                            key={this.key++}
+                                            userID={this.props.userID}
+                                            userData={this.props.userData}
+                                            readyQuestion={
+                                                this.props.readyQuestion
+                                            }
+                                            viewProfile={this.props.viewProfile}
+                                            changeRoute={this.props.changeRoute}
+                                            authorProfilePicture={
+                                                item.authorProfilePicture
+                                            }
+                                            poster={item.author}
+                                            authorID={item.authorID}
+                                            title={item.title}
+                                            question={item.text}
+                                            code={item.code}
+                                            postID={item.postID}
+                                            language={item.language}
+                                            number={item.score}
+                                            replies={0}
+                                        />
+                                    ) : (
+                                        ""
+                                    )
+                                )
+                            ) : (
+                                <NoQuestions />
+                            )}
                         </div>
                     ) : (
                         <div>
-                            <QuestionCard />
+                            {this.state.feedData.length > 0 ? (
+                                this.state.feedData.map((item) =>
+                                    item.relativePostID !== 0 ? (
+                                        <QuestionCard
+                                            key={this.key++}
+                                            userID={this.props.userID}
+                                            userData={this.props.userData}
+                                            readyQuestion={
+                                                this.props.readyQuestion
+                                            }
+                                            viewProfile={this.props.viewProfile}
+                                            changeRoute={this.props.changeRoute}
+                                            authorProfilePicture={
+                                                item.authorProfilePicture
+                                            }
+                                            poster={item.author}
+                                            authorID={item.authorID}
+                                            title={item.title}
+                                            question={item.text}
+                                            code={item.code}
+                                            postID={item.postID}
+                                            language={item.language}
+                                            number={item.score}
+                                            replies={0}
+                                        />
+                                    ) : (
+                                        ""
+                                    )
+                                )
+                            ) : (
+                                <NoQuestions />
+                            )}
                         </div>
                     )}
                 </div>

@@ -5,6 +5,7 @@ import QuestionFeed from "./QuestionFeed";
 import FullQuestion from "../FullQuestion/FullQuestion";
 import AskQuestion from "../AskQuestion";
 import Profile from "../Profile/Profile";
+import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
 
 class HomeGrid extends React.Component {
     constructor(props) {
@@ -37,6 +38,7 @@ class HomeGrid extends React.Component {
         text,
         code,
         postID,
+        language,
         authorID
     ) => {
         this.setState({
@@ -47,9 +49,11 @@ class HomeGrid extends React.Component {
                 text: text,
                 code: code,
                 postID: postID,
+                language: language,
                 authorID: authorID,
             },
         });
+        console.log(this.state.questionInfo);
     };
     changeFeed = (key, feed) => {
         this.setState({ key: key, viewFeed: feed });
@@ -145,6 +149,7 @@ class HomeGrid extends React.Component {
                             text={this.state.questionInfo.text}
                             code={this.state.questionInfo.code}
                             postID={this.state.questionInfo.postID}
+                            authorID={this.state.questionInfo.authorID}
                         />
                     ) : (
                         ""

@@ -35,6 +35,7 @@ export default class Question extends React.Component {
         this.props.changeRoute("question");
     };
     render() {
+        console.log(this.props.authorID);
         return (
             <div style={{ marginBottom: "10px" }}>
                 <Card sx={{ minWidth: 275 }}>

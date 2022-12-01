@@ -53,6 +53,7 @@ export default class FullQuestion extends React.Component {
     };
 
     render() {
+        console.log(this.props);
         if (!this.state.contentLoaded) {
             return (
                 <div style={{ margin: "20px 0" }}>
@@ -169,7 +170,7 @@ export default class FullQuestion extends React.Component {
                                     }}
                                     onClick={() =>
                                         this.props.viewProfile(
-                                            this.props.viewProfile
+                                            this.props.authorID
                                         )
                                     }
                                 />

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@mui/material";
 
 class ProfileTop extends React.Component {
     constructor(props) {
@@ -7,8 +8,6 @@ class ProfileTop extends React.Component {
             firstName: "",
             lastName: "",
             userID: 1,
-            firstName: "",
-            lastName: "",
             email: "",
             aboutMe: "",
             course: "",
@@ -16,6 +15,7 @@ class ProfileTop extends React.Component {
             profilePicture: "",
             asked: 0,
             answered: 0,
+            updateProfile: false,
         };
     }
 
@@ -50,6 +50,11 @@ class ProfileTop extends React.Component {
             });
     };
 
+    onProfilePicChange = (event) => {};
+
+    onAboutMeChange = (event) => {};
+
+    updateProfile = () => this.setState({ updateProfile: true });
     render() {
         return (
             <div
@@ -66,21 +71,50 @@ class ProfileTop extends React.Component {
                         flexWrap: "wrap",
                     }}
                 >
-                    <img
-                        alt="User profile-pic"
-                        src={
-                            process.env.REACT_APP_SERVER +
-                            "/public/" +
-                            this.state.profilePicture
-                        }
+                    <div
                         style={{
-                            minWidth: "120px",
-                            height: "120px",
-                            margin: "20px 50px 50px 0",
-                            border: "1px solid gray",
-                            borderRadius: "50%",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
-                    />
+                    >
+                        <img
+                            alt="User profile-pic"
+                            src={
+                                process.env.REACT_APP_SERVER +
+                                "/public/" +
+                                this.state.profilePicture
+                            }
+                            style={{
+                                minWidth: "120px",
+                                height: "120px",
+                                margin: "20px auto 0px ",
+                                border: "1px solid gray",
+                                borderRadius: "50%",
+                            }}
+                        />
+                        {this.props.userData.userID === this.props.userID ? (
+                            <div>
+                                <Button
+                                    id="loadFileXml"
+                                    onClick={() =>
+                                        document.getElementById("file").click()
+                                    }
+                                >
+                                    Change profile picture
+                                </Button>
+                                <input
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    id={"file"}
+                                    name="file"
+                                    onChange={() => this.onProfilePicChange()}
+                                />
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                    </div>
+
                     <div
                         style={{
                             display: "flex",
@@ -95,15 +129,36 @@ class ProfileTop extends React.Component {
                         </h2>
                         <div
                             style={{
+                                zIndex: "10",
                                 marginTop: "70px",
                                 minWidth: "200px",
                                 maxWidth: "65%",
                                 textAlign: "left",
                             }}
                         >
-                            <h3>{this.state.aboutMe}</h3>
+                            {this.state.updateProfile ? (
+                                <div>
+                                    <textarea
+                                        style={{
+                                            width: "300px",
+                                            height: "200px",
+                                        }}
+                                        onChange={(event) =>
+                                            console.log(event.target.value)
+                                        }
+                                    >
+                                        {this.state.aboutMe}
+                                    </textarea>
+                                </div>
+                            ) : (
+                                <h3>{this.state.aboutMe}</h3>
+                            )}
                         </div>
-                        <div>
+                        <div
+                            style={{
+                                zIndex: "0",
+                            }}
+                        >
                             <h3>{this.state.course}</h3>
                             <h3>year: {this.state.year}</h3>
                         </div>
@@ -123,6 +178,15 @@ class ProfileTop extends React.Component {
                         </h5>
                     </div>
                 </div>
+                {this.props.userData.userID === this.props.userID ? (
+                    <div>
+                        <Button onClick={() => this.updateProfile()}>
+                            Update profile info
+                        </Button>
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
         );
     }
