@@ -46,6 +46,7 @@ export default class CreateReply extends React.Component {
         ) {
             this.setState({ shortSubmit: true });
         } else {
+            console.log(this.props.userProfilePicture);
             fetch(process.env.REACT_APP_SERVER + "/postQuestion", {
                 method: "post",
                 headers: { "Content-Type": "application/json" },
@@ -58,6 +59,7 @@ export default class CreateReply extends React.Component {
                     relativePostID: this.state.relativePostID,
                     language: this.state.language,
                     category: this.state.category,
+                    authorProfilePicture: this.props.userProfilePicture,
                 }),
             })
                 .then((response) => response.json())
@@ -73,14 +75,29 @@ export default class CreateReply extends React.Component {
         //content if expanded
         if (this.state.expanded) {
             return (
-                <div style={{ margin: "10px 0" }}>
-                    <Card sx={{ minWidth: 275, pb: 2 }}>
-                        <CardContent>
+                <div style={{ margin: "10px auto" }}>
+                    <Card
+                        sx={{
+                            minWidth: 275,
+                            pb: 2,
+                            margin: "0 auto",
+                        }}
+                        style={{ margin: "0 auto" }}
+                    >
+                        <CardContent
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignContent: "center",
+                            }}
+                        >
                             <div
                                 style={{
+                                    width: "100%",
                                     display: "flex",
                                     flexDirection: "row",
                                     alignItems: "baseline",
+                                    margin: "0 auto",
                                 }}
                             >
                                 <img
@@ -109,11 +126,20 @@ export default class CreateReply extends React.Component {
                             <Typography
                                 variant="h5"
                                 component="div"
-                                sx={{ mb: 2 }}
+                                sx={{ mb: 2, textAlign: "center" }}
                             >
                                 Answer this question
                             </Typography>
-                            <div>
+                            <div
+                                style={{
+                                    width: "100%",
+                                    margin: "0 auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <textarea
                                     spellcheck="true"
                                     style={{
@@ -121,7 +147,6 @@ export default class CreateReply extends React.Component {
                                         minHeight: "200px",
                                         fontSize: "18pt",
                                         padding: "10px",
-                                        marginBottom: "10px",
                                         maxWidth: "90%",
                                     }}
                                     onChange={this.onTextChange}
@@ -129,7 +154,12 @@ export default class CreateReply extends React.Component {
                                 <Typography
                                     variant="h5"
                                     component="div"
-                                    sx={{ mb: 2 }}
+                                    sx={{
+                                        mt: 1,
+                                        mb: 2,
+                                        textAlign: "left",
+                                        marginLeft: "0",
+                                    }}
                                 >
                                     Add some code to your answer
                                 </Typography>
@@ -140,7 +170,6 @@ export default class CreateReply extends React.Component {
                             <div
                                 style={{
                                     width: "400px",
-                                    border: "2px solid red",
                                     margin: "0 auto",
                                     marginBottom: "20px",
                                 }}

@@ -78,6 +78,24 @@ function passwordHash(thePassword, theSalt) {
 
 //#endregion SECURITY
 
+//#region SQL QUERIES
+
+const GET_ALL_USERS = "SELECT * FROM users";
+const FIND_USER = "SELECT * FROM users WHERE email = ?";
+const SIGN_UP_USER =
+    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
+const GET_QUESTION_FEED =
+    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?) ORDER BY postID DESC";
+const GET_QUESTION_REPLIES =
+    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
+const POST_QUESTION =
+    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, authorProfilePicture, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?, ?)";
+
+//#endregion SQL QUERIES
+
+//#region DATABASE SETUP ENDPOINTS
+
 app.get("/usersSetup", (req, res) => {
     db.serialize(() => {
         // delete any existing user table
@@ -128,33 +146,6 @@ app.get("/usersSetup", (req, res) => {
     res.send("Users table setup complete");
 });
 
-const GET_ALL_USERS = "SELECT * FROM users";
-const FIND_USER = "SELECT * FROM users WHERE email = ?";
-const SIGN_UP_USER =
-    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
-const GET_QUESTION_FEED =
-    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)";
-const GET_QUESTION_REPLIES =
-    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
-const POST_QUESTION =
-    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?)";
-
-// get all users
-app.get("/getAllUsers", (req, res, next) => {
-    // grab all user data
-    db.all(GET_ALL_USERS, [], (err, userData) => {
-        // if error
-        if (err) {
-            // respond with error status and error message
-            res.status(500).send(err.message);
-            return;
-        }
-        // respond with userData on success
-        res.send(userData);
-    });
-});
-
 app.get("/postsSetup", (req, res) => {
     db.serialize(() => {
         // delete any existing user table
@@ -202,7 +193,20 @@ app.get("/postsSetup", (req, res) => {
     console.log("posts table set up complete");
     res.send("Posts table setup complete");
 });
-
+// get all users
+app.get("/getAllUsers", (req, res, next) => {
+    // grab all user data
+    db.all(GET_ALL_USERS, [], (err, userData) => {
+        // if error
+        if (err) {
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with userData on success
+        res.send(userData);
+    });
+});
 // get all users
 app.get("/getAllPosts", (req, res, next) => {
     // grab all user data
@@ -218,7 +222,8 @@ app.get("/getAllPosts", (req, res, next) => {
     });
 });
 
-// get all users
+//#endregion DATABASE SETUP ENDPOINTS
+
 app.post("/getQuestionFeed", (req, res, next) => {
     // grab all user data
     //dont include 'reply' as title to not pull replies
@@ -236,7 +241,6 @@ app.post("/getQuestionFeed", (req, res, next) => {
     });
 });
 
-// get all users
 app.post("/getQuestionReplies", (req, res, next) => {
     // grab all user data
 
@@ -251,10 +255,6 @@ app.post("/getQuestionReplies", (req, res, next) => {
         // respond with userData on success
         res.json(postData);
     });
-});
-
-app.get("/", (req, res) => {
-    res.send(`Server is running on port ${port}`);
 });
 
 app.post("/getSession", (req, res) => {});
@@ -374,7 +374,27 @@ app.post("/signin", (req, res) => {
 
 app.post("/postQuestion", (req, res) => {
     let postData = req.body;
-    console.log(req.body);
+    if (postData.relativePostID === 0) {
+        db.run(
+            "UPDATE `users` SET asked = asked + 1 WHERE userID = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } else {
+        db.run(
+            "UPDATE `users` SET `answered` = `answered`+ 1 WHERE `userID` = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    }
     db.run(
         POST_QUESTION,
         [
@@ -386,10 +406,10 @@ app.post("/postQuestion", (req, res) => {
             postData.code,
             postData.language,
             postData.category,
+            postData.authorProfilePicture,
             0,
         ],
         (err, rows) => {
-            console.log;
             if (err) {
                 console.log("failed to add post to database");
                 console.log(err.message);
@@ -425,6 +445,35 @@ app.post("/getProfile", (req, res) => {
             });
         }
     );
+});
+
+app.post("/vote", (req, res) => {
+    let vote = req.body.vote;
+    let postID = req.body.postID;
+    if (vote === "up") {
+        db.run(
+            "UPDATE `posts` SET score = score + 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } else {
+        db.run(
+            "UPDATE `posts` SET score = score - 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } //respond with success
+    res.json({
+        status: "success",
+    });
 });
 
 app.listen(port, () => {

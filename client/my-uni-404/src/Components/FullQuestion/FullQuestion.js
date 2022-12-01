@@ -41,9 +41,11 @@ export default class FullQuestion extends React.Component {
             // .then(await this.delayFunction())
             // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
+                console.log(data);
                 this.setState({ replyData: data });
                 this.setState({ contentLoaded: true });
             });
+        console.log(this.state.replyData);
     };
 
     refreshQuestion = () => {
@@ -239,6 +241,7 @@ export default class FullQuestion extends React.Component {
                             {this.state.replyData.map((item) => (
                                 <>
                                     <Answer
+                                        postID={item.postID}
                                         viewProfile={this.props.viewProfile}
                                         authorID={item.authorID}
                                         author={item.author}

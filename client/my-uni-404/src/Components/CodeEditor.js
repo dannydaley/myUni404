@@ -12,7 +12,7 @@ class CodeEditor extends React.Component {
     render() {
         return (
             <textarea
-                placeholder="Adding code will improve your chances for anaccurate answer"
+                placeholder="Adding code will improve your chances for an accurate answer"
                 spellcheck="false"
                 className="codeEditor"
                 style={{

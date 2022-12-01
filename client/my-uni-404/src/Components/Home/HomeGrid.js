@@ -151,6 +151,7 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "ask" ? (
                         <AskQuestion
+                            changeFeed={this.changeFeed}
                             userProfilePicture={this.props.userProfilePicture}
                             userData={this.props.userData}
                             userID={this.props.userID}

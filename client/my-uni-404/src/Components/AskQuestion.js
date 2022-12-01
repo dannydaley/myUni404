@@ -48,12 +48,14 @@ export default class AskQuestion extends React.Component {
                     relativePostID: 0,
                     language: this.state.language,
                     category: this.state.category,
+                    authorProfilePicture:
+                        this.props.userData.userProfilePicture,
                 }),
             })
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.status === "success") {
-                        this.props.changeRoute("feed");
+                        this.props.changeFeed(10, this.state.category);
                     }
                 });
         }
@@ -112,16 +114,22 @@ export default class AskQuestion extends React.Component {
                             >
                                 Try to include as much detail as possible
                             </Typography>
-                            <input
-                                onChange={this.onTitleChange}
-                                type="text"
+                            <div
                                 style={{
-                                    height: "40px",
-                                    marginBottom: "10px",
-                                    width: "90%",
+                                    display: "flex",
                                 }}
-                                placeholder="Write a title for your question"
-                            />
+                            >
+                                <input
+                                    onChange={this.onTitleChange}
+                                    type="text"
+                                    style={{
+                                        height: "40px",
+                                        margin: "0 auto 10px",
+                                        width: "90%",
+                                    }}
+                                    placeholder="Write a title for your question"
+                                />
+                            </div>
                             <div
                                 style={{
                                     minHeight: "200px",
@@ -133,7 +141,7 @@ export default class AskQuestion extends React.Component {
                             >
                                 <textarea
                                     placeholder="Write the body of your question here"
-                                    spellcheck="true"
+                                    spellCheck="true"
                                     style={{
                                         width: "90%",
                                         minHeight: "200px",
@@ -201,10 +209,11 @@ export default class AskQuestion extends React.Component {
                         ) : (
                             ""
                         )}
-                        <div style={{ padding: "0 20px" }}>
+                        <div style={{ padding: "0 20px", display: "flex" }}>
                             <Button
                                 variant="contained"
                                 onClick={this.submitQuestion}
+                                style={{ margin: "0 auto" }}
                             >
                                 Submit Question
                             </Button>
