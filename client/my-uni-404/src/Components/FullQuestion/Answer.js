@@ -60,7 +60,7 @@ export default class Answer extends React.Component {
                                 alignItems: "baseline",
                             }}
                         >
-                            <img
+                            {/* <img
                                 alt=""
                                 src={
                                     process.env.REACT_APP_SERVER +
@@ -74,9 +74,27 @@ export default class Answer extends React.Component {
                                     borderRadius: "50%",
                                 }}
                                 onClick={() =>
+                                    
+                                }
+                            /> */}
+                            <div
+                                style={{
+                                    backgroundImage:
+                                        "url(" +
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.authorProfilePicture +
+                                        ")",
+                                    backgroundSize: "cover",
+                                    minWidth: "60px",
+                                    height: "60px",
+                                    border: "1px solid gray",
+                                    borderRadius: "50%",
+                                }}
+                                onClick={() =>
                                     this.props.viewProfile(this.props.authorID)
                                 }
-                            />
+                            ></div>
                             <Typography
                                 sx={{ fontSize: 18 }}
                                 color="text.secondary"

@@ -74,20 +74,27 @@ export default class AskQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt="user profile pic"
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.userData.userProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.userData
+                                                .userProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
-                                />
+                                    onClick={() =>
+                                        this.props.viewProfile(
+                                            this.props.authorID
+                                        )
+                                    }
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"

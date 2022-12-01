@@ -48,6 +48,8 @@ class App extends React.Component {
         this.setState({ route: route });
     };
 
+    updateProfilePicture = (newLocation) =>
+        this.setState({ userProfilePicture: newLocation });
     postInfo = (postDataIn) => (this.postData = postDataIn);
 
     router = createBrowserRouter([
@@ -91,6 +93,9 @@ class App extends React.Component {
                                 path="/"
                                 element={
                                     <HomePage
+                                        updateProfilePicture={
+                                            this.updateProfilePicture
+                                        }
                                         userProfilePicture={
                                             this.state.userProfilePicture
                                         }

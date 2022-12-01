@@ -20,22 +20,23 @@ export default function HomeLeft(props) {
                 top: 0,
             }}
         >
-            <img
-                alt=""
-                src={
-                    process.env.REACT_APP_SERVER +
-                    "/public/" +
-                    props.userData.userProfilePicture
-                }
+            <div
                 onClick={() => props.changeRoute("myProfile")}
                 style={{
-                    width: "120px",
+                    backgroundImage:
+                        "url(" +
+                        process.env.REACT_APP_SERVER +
+                        "/public/" +
+                        props.userData.userProfilePicture +
+                        ")",
+                    backgroundSize: "cover",
+                    minWidth: "120px",
                     height: "120px",
                     marginBottom: "50px",
                     border: "1px solid gray",
                     borderRadius: "50%",
                 }}
-            />
+            ></div>
             <Button
                 variant="contained"
                 sx={{

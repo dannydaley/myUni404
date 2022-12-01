@@ -6,6 +6,7 @@ import FullQuestion from "../FullQuestion/FullQuestion";
 import AskQuestion from "../AskQuestion";
 import Profile from "../Profile/Profile";
 import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
+import { useState } from "react";
 
 class HomeGrid extends React.Component {
     constructor(props) {
@@ -69,6 +70,7 @@ class HomeGrid extends React.Component {
             >
                 <Grid width={"225px"}>
                     <HomeLeft
+                        key={this.state.key}
                         userID={this.props.userID}
                         changeFeed={this.changeFeed}
                         changeRoute={this.changeRoute}
@@ -168,6 +170,11 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "myProfile" ? (
                         <Profile
+                            updateProfilePicture={
+                                this.props.updateProfilePicture
+                            }
+                            key={this.state.key}
+                            changeKey={this.props.changeKey}
                             userProfilePicture={this.props.userProfilePicture}
                             loggedInEmail={this.props.loggedInEmail}
                             userData={this.props.userData}
@@ -180,6 +187,11 @@ class HomeGrid extends React.Component {
                     )}
                     {this.state.route === "profile" ? (
                         <Profile
+                            updateProfilePicture={
+                                this.props.updateProfilePicture
+                            }
+                            key={this.state.key}
+                            changeKey={this.props.changeKey}
                             loggedInEmail={this.props.loggedInEmail}
                             userData={this.props.userData}
                             userID={this.state.viewProfile}

@@ -100,20 +100,22 @@ export default class CreateReply extends React.Component {
                                     margin: "0 auto",
                                 }}
                             >
-                                <img
-                                    alt=""
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.userProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.userProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
-                                />
+                                ></div>
+
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"

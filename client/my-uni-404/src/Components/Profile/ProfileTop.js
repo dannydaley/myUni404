@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@mui/material";
+import axios from "axios";
 
 class ProfileTop extends React.Component {
     constructor(props) {
@@ -7,7 +8,7 @@ class ProfileTop extends React.Component {
         this.state = {
             firstName: "",
             lastName: "",
-            userID: 1,
+            userID: this.props.userID,
             email: "",
             aboutMe: "",
             course: "",
@@ -16,6 +17,7 @@ class ProfileTop extends React.Component {
             asked: 0,
             answered: 0,
             updateProfile: false,
+            updateAboutMe: "",
         };
     }
 
@@ -32,8 +34,6 @@ class ProfileTop extends React.Component {
         })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
-            // .then(await this.delayFunction())
-            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
                 this.setState({
                     firstName: data.userData.firstName,
@@ -50,9 +50,54 @@ class ProfileTop extends React.Component {
             });
     };
 
-    onProfilePicChange = (event) => {};
+    onProfilePictureChange = (event) => {
+        this.updateProfilePicture(event.target.files[0]);
+    };
+    updateProfilePicture = async (image) => {
+        let formData = new FormData();
+        formData.append("image", image);
+        formData.append("uploader", this.state.firstName + this.state.lastName);
+        formData.append("userID", this.props.userID);
+        await axios
+            .post(
+                process.env.REACT_APP_SERVER + "/changeProfilePicture",
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    body: JSON.stringify({
+                        userID: this.props.userID,
+                        name: this.state.firstName + this.state.lastName,
+                    }),
+                }
+            )
+            .then((res) => {
+                this.props.updateProfilePicture(res.data.profilePicture);
+                this.setState({ profilePicture: res.data.profilePicture });
+            });
+    };
 
-    onAboutMeChange = (event) => {};
+    updateAboutMe = async () => {
+        fetch(process.env.REACT_APP_SERVER + "/updateAboutMe", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userID: this.props.userID,
+                aboutMe: this.state.updateAboutMe,
+            }),
+        })
+            //TURN THE RESPONSE INTO A JSON OBJECT
+            .then((response) => response.json())
+            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
+            .then((data) => {
+                this.setState({
+                    aboutMe: this.state.updateAboutMe,
+                    updateProfile: false,
+                });
+            });
+    };
+
+    onAboutMeChange = (event) =>
+        this.setState({ updateAboutMe: event.target.value });
 
     updateProfile = () => this.setState({ updateProfile: true });
     render() {
@@ -77,27 +122,30 @@ class ProfileTop extends React.Component {
                             flexDirection: "column",
                         }}
                     >
-                        <img
-                            alt="User profile-pic"
-                            src={
-                                process.env.REACT_APP_SERVER +
-                                "/public/" +
-                                this.state.profilePicture
-                            }
+                        <div
                             style={{
+                                backgroundImage:
+                                    "url(" +
+                                    process.env.REACT_APP_SERVER +
+                                    "/public/" +
+                                    this.state.profilePicture +
+                                    ")",
+                                backgroundSize: "cover",
                                 minWidth: "120px",
                                 height: "120px",
                                 margin: "20px auto 0px ",
                                 border: "1px solid gray",
                                 borderRadius: "50%",
                             }}
-                        />
+                        ></div>
                         {this.props.userData.userID === this.props.userID ? (
                             <div>
                                 <Button
                                     id="loadFileXml"
                                     onClick={() =>
-                                        document.getElementById("file").click()
+                                        document
+                                            .getElementById("file-input")
+                                            .click()
                                     }
                                 >
                                     Change profile picture
@@ -105,9 +153,11 @@ class ProfileTop extends React.Component {
                                 <input
                                     type="file"
                                     style={{ display: "none" }}
-                                    id={"file"}
+                                    id={"file-input"}
                                     name="file"
-                                    onChange={() => this.onProfilePicChange()}
+                                    onChange={this.onProfilePictureChange.bind(
+                                        this
+                                    )}
                                 />
                             </div>
                         ) : (
@@ -137,21 +187,40 @@ class ProfileTop extends React.Component {
                             }}
                         >
                             {this.state.updateProfile ? (
-                                <div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                    }}
+                                >
                                     <textarea
                                         style={{
                                             width: "300px",
                                             height: "200px",
                                         }}
                                         onChange={(event) =>
-                                            console.log(event.target.value)
+                                            this.onAboutMeChange(event)
                                         }
                                     >
                                         {this.state.aboutMe}
                                     </textarea>
+                                    <Button
+                                        sx={{ margin: "0 auto", width: "100%" }}
+                                        onClick={() => this.updateAboutMe()}
+                                    >
+                                        Submit changes
+                                    </Button>
                                 </div>
                             ) : (
-                                <h3>{this.state.aboutMe}</h3>
+                                <div
+                                    style={{
+                                        width: "300px",
+                                        height: "200px",
+                                    }}
+                                >
+                                    <h3>{this.state.aboutMe}</h3>
+                                </div>
                             )}
                         </div>
                         <div

@@ -15,6 +15,37 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
+//#region IMAGES AND IMAGE UPLOAD HANDLING
+
+// default profile picture applied to all users profilePicture field in the users table of the db on account creation
+
+//set up multer middleware for image uploads
+var multer = require("multer");
+
+// set up storage for file uploads
+const storage = multer.diskStorage({
+    // set destination to public image directory
+    destination: "public/images/profilePictures",
+    filename: function (req, file, cb) {
+        // create a unique suffix so that image names will never have a duplicate
+        //suffix consists of the date, a hyphen and then a large random number
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, "IMAGE-" + uniqueSuffix + ".png");
+        // generate the file name of the file to be added to the public image directory
+        // filename contains path to folder to make things easier across the server
+        // we append .png top the filename so that files are recognised as their format
+        let fileName =
+            "images/profilePictures/" + "IMAGE-" + uniqueSuffix + ".png";
+        // update the string attached to the incoming req.body.image field
+        // this is added to the database as the imageLocation
+        req.body.imageLocations += fileName + ",";
+    },
+});
+// set up multer function to be called on uploads
+let upload = multer({ storage: storage });
+
+//#endregion IMAGES AND IMAGE UPLOAD HANDLING
+
 // var sqlite3 = require("sqlite3").verbose();
 var sqlite3 = require("sqlite3").verbose();
 
@@ -92,6 +123,7 @@ const GET_QUESTION_REPLIES =
 const POST_QUESTION =
     "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, authorProfilePicture, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?, ?)";
 
+const UPDATE_USER_ABOUT_ME = "UPDATE users SET aboutMe = ? WHERE userID= ?";
 //#endregion SQL QUERIES
 
 //#region DATABASE SETUP ENDPOINTS
@@ -443,6 +475,69 @@ app.post("/getProfile", (req, res) => {
             });
         }
     );
+});
+
+app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
+    /*ALREADY RUN THROUGH MULTER*/
+    //remove undefined from filename after being processed by multer
+    req.body.imageLocations = req.body.imageLocations.replace("undefined", "");
+    //remove any commas from filename after being processed by multer
+    let image = req.body.imageLocations.replace(",", "");
+    // update the profilePicture attached to the user where username matches the logged in users from the request
+    db.run(
+        "UPDATE users SET profilePicture = ? WHERE userID = ?",
+        [image, req.body.userID],
+        (err, result) => {
+            // if error
+            if (err) {
+                // respond with error status and error message
+                res.status(500).send(err.message);
+                return;
+            }
+            // grab users first name and lastname from database by username from request
+            db.all(
+                "SELECT users.firstName, users.lastName FROM users WHERE userID = ? LIMIT 1",
+                req.body.userID,
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+            db.all(
+                "UPDATE posts SET authorProfilePicture = ? WHERE authorID = ?",
+                [image, req.body.userID],
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+        }
+    );
+    res.json({
+        profilePicture: image,
+    });
+});
+
+app.post("/updateAboutMe", (req, res) => {
+    //pull variables from request body for better readability
+    const { aboutMe, userID } = req.body;
+    //update users general information in database
+    db.run(UPDATE_USER_ABOUT_ME, [aboutMe, userID], (err) => {
+        if (err) {
+            //error response
+            res.json("ERROR AT DATABASE");
+        }
+        //success response
+        res.json("success at database");
+    });
 });
 
 app.post("/vote", (req, res) => {

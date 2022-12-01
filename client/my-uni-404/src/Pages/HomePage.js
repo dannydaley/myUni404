@@ -4,9 +4,15 @@ import React from "react";
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            key: 0,
+        };
     }
 
+    changeKey = () => {
+        alert("triggered");
+        this.setState({ key: this.state.key + 1 });
+    };
     loggedInEmail = "";
     //COMPONENT DID MOUNT IS BUILT IN AND RUNS WHEN THE COMPONENT MOUNTS
     // componentDidMount = async () => {
@@ -33,6 +39,9 @@ class HomePage extends React.Component {
         return (
             <div>
                 <HomeGrid
+                    updateProfilePicture={this.props.updateProfilePicture}
+                    key={this.state.key}
+                    changeKey={this.changeKey}
                     userProfilePicture={this.props.userProfilePicture}
                     loggedInEmail={this.loggedInEmail}
                     userData={this.props.userData}

@@ -1,6 +1,5 @@
 // FOR MYSQL CONVERSION FROM SQLITE 3, DB QUERIES CHANGE FROM .RUN, .GET , .SERIALIZE ETC TO .QUERY
 //  CHANGES IN TABLE CREATION: AUTOINCREMENT BECOMES AUTO_INCREMENT
-
 const express = require("express");
 const app = express();
 const port = 3001;
@@ -18,23 +17,46 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
+//#region IMAGES AND IMAGE UPLOAD HANDLING
+
+// default profile picture applied to all users profilePicture field in the users table of the db on account creation
+
+//set up multer middleware for image uploads
+var multer = require("multer");
+
+// set up storage for file uploads
+const storage = multer.diskStorage({
+    // set destination to public image directory
+    destination: "public/images/profilePictures",
+    filename: function (req, file, cb) {
+        // create a unique suffix so that image names will never have a duplicate
+        //suffix consists of the date, a hyphen and then a large random number
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, "IMAGE-" + uniqueSuffix + ".png");
+        // generate the file name of the file to be added to the public image directory
+        // filename contains path to folder to make things easier across the server
+        // we append .png top the filename so that files are recognised as their format
+        let fileName =
+            "images/profilePictures/" + "IMAGE-" + uniqueSuffix + ".png";
+        // update the string attached to the incoming req.body.image field
+        // this is added to the database as the imageLocation
+        req.body.imageLocations += fileName + ",";
+    },
+});
+// set up multer function to be called on uploads
+let upload = multer({ storage: storage });
+
+//#endregion IMAGES AND IMAGE UPLOAD HANDLING
+
+// var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require("sqlite3").verbose();
+
+let db = new sqlite3.Database("./SQLite3.db");
+
+app.locals.db = db;
+
 let userDataJSON = require("./dummy-data/users.json");
 let postDataJSON = require("./dummy-data/posts.json");
-
-let mysql = require("mysql");
-
-var db = mysql.createConnection({
-    host: process.env.DATABASEHOST,
-    port: process.env.DATABASEPORT,
-    user: process.env.DATABASEUSER,
-    password: process.env.DATABASEPASSWORD,
-    database: process.env.DATABASENAME,
-});
-
-db.connect(function (err) {
-    if (err) throw err;
-    console.log("Database Connected!");
-});
 
 // Session setup
 var session = require("cookie-session");
@@ -89,32 +111,24 @@ function passwordHash(thePassword, theSalt) {
 
 //#endregion SECURITY
 
-const GET_ALL_USERS = "SELECT * FROM `users`";
+//#region SQL QUERIES
+
+const GET_ALL_USERS = "SELECT * FROM users";
 const FIND_USER = "SELECT * FROM users WHERE email = ?";
 const SIGN_UP_USER =
     "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
 const GET_QUESTION_FEED =
-    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)";
+    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?) ORDER BY postID DESC";
 const GET_QUESTION_REPLIES =
     "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
 const POST_QUESTION =
-    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, authorProfilePicture, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?, ?)";
 
-// get all users
-app.get("/getAllUsers", (req, res, next) => {
-    // grab all user data
-    db.query(GET_ALL_USERS, [], (err, userData) => {
-        // if error
-        if (err) {
-            // respond with error status and error message
-            res.status(500).send(err.message);
-            return;
-        }
-        // respond with userData on success
-        res.send(userData);
-    });
-});
+const UPDATE_USER_ABOUT_ME = "UPDATE users SET aboutMe = ? WHERE userID= ?";
+//#endregion SQL QUERIES
+
+//#region DATABASE SETUP ENDPOINTS
 
 app.get("/usersSetup", (req, res) => {
     db.query(() => {
@@ -169,7 +183,7 @@ app.get("/usersSetup", (req, res) => {
 app.get("/postsSetup", (req, res) => {
     db.query(() => {
         // delete any existing user table
-        db.query.query("DROP TABLE IF EXISTS `posts`"),
+        db.query("DROP TABLE IF EXISTS `posts`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
@@ -213,11 +227,24 @@ app.get("/postsSetup", (req, res) => {
     console.log("posts table set up complete");
     res.send("Posts table setup complete");
 });
-
+// get all users
+app.get("/getAllUsers", (req, res, next) => {
+    // grab all user data
+    db.all(GET_ALL_USERS, [], (err, userData) => {
+        // if error
+        if (err) {
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with userData on success
+        res.send(userData);
+    });
+});
 // get all users
 app.get("/getAllPosts", (req, res, next) => {
     // grab all user data
-    db.query(GET_ALL_POSTS, [], (err, postData) => {
+    db.all(GET_ALL_POSTS, [], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -229,13 +256,14 @@ app.get("/getAllPosts", (req, res, next) => {
     });
 });
 
-// get all users
+//#endregion DATABASE SETUP ENDPOINTS
+
 app.post("/getQuestionFeed", (req, res, next) => {
     // grab all user data
     //dont include 'reply' as title to not pull replies
     let dontInclude = "reply";
     let category = req.body.feed;
-    db.query(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
+    db.all(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -247,12 +275,11 @@ app.post("/getQuestionFeed", (req, res, next) => {
     });
 });
 
-// get all users
 app.post("/getQuestionReplies", (req, res, next) => {
     // grab all user data
 
     let relativePostID = req.body.postID;
-    db.query(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
+    db.all(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -262,10 +289,6 @@ app.post("/getQuestionReplies", (req, res, next) => {
         // respond with userData on success
         res.json(postData);
     });
-});
-
-app.get("/", (req, res) => {
-    res.send(`Server is running on port ${port}`);
 });
 
 app.post("/getSession", (req, res) => {});
@@ -385,7 +408,27 @@ app.post("/signin", (req, res) => {
 
 app.post("/postQuestion", (req, res) => {
     let postData = req.body;
-    console.log(req.body);
+    if (postData.relativePostID === 0) {
+        db.query(
+            "UPDATE `users` SET asked = asked + 1 WHERE userID = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } else {
+        db.query(
+            "UPDATE `users` SET `answered` = `answered`+ 1 WHERE `userID` = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    }
     db.query(
         POST_QUESTION,
         [
@@ -397,10 +440,10 @@ app.post("/postQuestion", (req, res) => {
             postData.code,
             postData.language,
             postData.category,
+            postData.authorProfilePicture,
             0,
         ],
         (err, rows) => {
-            console.log;
             if (err) {
                 console.log("failed to add post to database");
                 console.log(err.message);
@@ -416,9 +459,8 @@ app.post("/postQuestion", (req, res) => {
 });
 
 app.post("/getProfile", (req, res) => {
-    console.log(req.body);
     profileID = req.body.userID;
-    db.query(
+    db.all(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
         profileID,
         (err, rows) => {
@@ -428,11 +470,119 @@ app.post("/getProfile", (req, res) => {
                 res.status(500).send(err.message);
                 return;
             }
-            console.log(rows);
             //respond with success
             res.json({
                 status: "success",
                 userData: rows[0],
+            });
+        }
+    );
+});
+
+app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
+    /*ALREADY RUN THROUGH MULTER*/
+    //remove undefined from filename after being processed by multer
+    req.body.imageLocations = req.body.imageLocations.replace("undefined", "");
+    //remove any commas from filename after being processed by multer
+    let image = req.body.imageLocations.replace(",", "");
+    // update the profilePicture attached to the user where username matches the logged in users from the request
+    db.query(
+        "UPDATE users SET profilePicture = ? WHERE userID = ?",
+        [image, req.body.userID],
+        (err, result) => {
+            // if error
+            if (err) {
+                // respond with error status and error message
+                res.status(500).send(err.message);
+                return;
+            }
+            // grab users first name and lastname from database by username from request
+            db.all(
+                "SELECT users.firstName, users.lastName FROM users WHERE userID = ? LIMIT 1",
+                req.body.userID,
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+            db.all(
+                "UPDATE posts SET authorProfilePicture = ? WHERE authorID = ?",
+                [image, req.body.userID],
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+        }
+    );
+    res.json({
+        profilePicture: image,
+    });
+});
+
+app.post("/updateAboutMe", (req, res) => {
+    //pull variables from request body for better readability
+    const { aboutMe, userID } = req.body;
+    //update users general information in database
+    db.query(UPDATE_USER_ABOUT_ME, [aboutMe, userID], (err) => {
+        if (err) {
+            //error response
+            res.json("ERROR AT DATABASE");
+        }
+        //success response
+        res.json("success at database");
+    });
+});
+
+app.post("/vote", (req, res) => {
+    let vote = req.body.vote;
+    let postID = req.body.postID;
+    if (vote === "up") {
+        db.query(
+            "UPDATE `posts` SET score = score + 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } else {
+        db.query(
+            "UPDATE `posts` SET score = score - 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } //respond with success
+    res.json({
+        status: "success",
+    });
+});
+
+app.post("/getUserQuestionFeed", (req, res) => {
+    let userID = req.body.userID;
+    db.all(
+        "SELECT * FROM `posts` WHERE `authorID` = ?",
+        userID,
+        (err, rows) => {
+            if (err) {
+                console.log(err.message);
+            }
+            res.json({
+                status: "success",
+                postData: rows,
             });
         }
     );

@@ -38,6 +38,8 @@ class Profile extends React.Component {
         return (
             <>
                 <ProfileTop
+                    updateProfilePicture={this.props.updateProfilePicture}
+                    changeKey={this.props.changeKey}
                     loggedInEmail={this.props.loggedInEmail}
                     userData={this.props.userData}
                     userID={this.props.userID}

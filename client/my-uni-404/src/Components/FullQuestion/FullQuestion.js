@@ -66,25 +66,26 @@ export default class FullQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt=""
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.authorProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.authorProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
                                     onClick={() =>
                                         this.props.viewProfile(
-                                            this.props.userID
+                                            this.props.authorID
                                         )
                                     }
-                                />
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"
@@ -155,17 +156,18 @@ export default class FullQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt=""
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.authorProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.authorProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
                                     onClick={() =>
@@ -173,7 +175,7 @@ export default class FullQuestion extends React.Component {
                                             this.props.authorID
                                         )
                                     }
-                                />
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"
