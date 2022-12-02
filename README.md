@@ -1,5 +1,7 @@
 # myUni404
 
+myUni404 is a tool for universities with computing programs. The intent is for students and ambitious programmers to have a platform in which they can ask questions in a beginner friendly environment, and improve their knowledge and bug fixing skills by answering questions for others. The platform has a built in code syntax highlighter which formats entered code making it not only visually pleasing, but easier to identify issues too.
+
 ## Features
 
 View question feed
@@ -34,7 +36,21 @@ The front end is built in React, with some stylings coming from the material-ui 
 
 ## BACK END
 
-The back end is an express js server
+The back end is an express js server. **Two different server files exist**, one is intended for deployment with a mySQL server while the other for use with SQLite3. Both server files have the same functionality just with slightly different syntax for SQL queries, namely SQLites' db.run(), db.get(), db.all() and db.serialize are all covered by db.query in mySQL. AUTOINCREMENT also becomes AUTO_INCREMENT in mySQL server.
+Image uploads for profile pictures are handled by Multer, images are loaded into /public/images/profilePictures from the server root directory.
+
+#### INSTALLED DEPENDENCIES
+
+-   "body-parser": "^1.20.1",
+-   "cookie-parser": "^1.4.6",
+-   "cookie-session": "^2.0.0",
+-   "cors": "^2.8.5",
+-   "crypto": "^1.0.1",
+-   "dotenv": "^16.0.3",
+-   "express": "^4.18.2",
+-   "multer": "^1.4.5-lts.1",
+-   "mysql": "^2.18.1",
+-   "sqlite3": "^5.1.2"
 
 ## DATABASE
 
