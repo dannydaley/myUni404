@@ -1,5 +1,3 @@
-// FOR MYSQL CONVERSION FROM SQLITE 3, DB QUERIES CHANGE FROM .RUN, .GET , .SERIALIZE ETC TO .QUERY
-//  CHANGES IN TABLE CREATION: AUTOINCREMENT BECOMES AUTO_INCREMENT
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -27,7 +25,6 @@ app.use((req, res, next) => {
     );
     next();
 });
-
 //#region IMAGES AND IMAGE UPLOAD HANDLING
 
 //set up multer middleware for image uploads
@@ -59,20 +56,10 @@ let upload = multer({ storage: storage });
 
 //#endregion IMAGES AND IMAGE UPLOAD HANDLING
 
-let mysql = require("mysql");
+// var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require("sqlite3").verbose();
 
-var db = mysql.createConnection({
-    host: process.env.DATABASEHOST,
-    port: process.env.DATABASEPORT,
-    user: process.env.DATABASEUSER,
-    password: process.env.DATABASEPASSWORD,
-    database: process.env.DATABASENAME,
-});
-
-db.connect(function (err) {
-    if (err) throw err;
-    console.log("Database Connected!");
-});
+let db = new sqlite3.Database("./SQLite3.db");
 
 app.locals.db = db;
 
@@ -156,17 +143,17 @@ const SEARCH_TERM =
 //#region DATABASE SETUP ENDPOINTS
 
 app.get("/usersSetup", (req, res) => {
-    db.query(() => {
+    db.serialize(() => {
         // delete any existing user table
-        db.query("DROP TABLE IF EXISTS `users`"),
+        db.run("DROP TABLE IF EXISTS `users`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.query(
-            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTO_INCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(512), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
+        db.run(
+            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTOINCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(512), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
             // , firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER'
             (err) => {
                 if (err) {
@@ -176,7 +163,7 @@ app.get("/usersSetup", (req, res) => {
         );
         let users = userDataJSON.entries;
         users.forEach((user) => {
-            db.query(
+            db.run(
                 "INSERT INTO users (firstName, lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -206,17 +193,17 @@ app.get("/usersSetup", (req, res) => {
 });
 
 app.get("/postsSetup", (req, res) => {
-    db.query(() => {
+    db.serialize(() => {
         // delete any existing user table
-        db.query("DROP TABLE IF EXISTS `posts`"),
+        db.run("DROP TABLE IF EXISTS `posts`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.query(
-            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTO_INCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
+        db.run(
+            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
             (err) => {
                 if (err) {
                     console.log(err.message);
@@ -225,7 +212,7 @@ app.get("/postsSetup", (req, res) => {
         );
         let posts = postDataJSON.entries;
         posts.forEach((post) => {
-            db.query(
+            db.run(
                 "INSERT INTO posts (author, authorID, authorProfilePicture, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -255,7 +242,7 @@ app.get("/postsSetup", (req, res) => {
 // get all users
 app.get("/getAllUsers", (req, res, next) => {
     // grab all user data
-    db.query(GET_ALL_USERS, [], (err, userData) => {
+    db.all(GET_ALL_USERS, [], (err, userData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -269,7 +256,7 @@ app.get("/getAllUsers", (req, res, next) => {
 // get all users
 app.get("/getAllPosts", (req, res, next) => {
     // grab all user data
-    db.query(GET_ALL_POSTS, [], (err, postData) => {
+    db.all(GET_ALL_POSTS, [], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -288,7 +275,7 @@ app.post("/getQuestionFeed", (req, res, next) => {
     //dont include 'reply' as title to not pull replies
     let dontInclude = "reply";
     let category = req.body.feed;
-    db.query(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
+    db.all(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -304,7 +291,7 @@ app.post("/getQuestionReplies", (req, res, next) => {
     // grab all user data
 
     let relativePostID = req.body.postID;
-    db.query(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
+    db.all(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -335,12 +322,12 @@ app.post("/signUp", (req, res) => {
         let profilePicture = defaultProfilePicture;
         //assign other values
         let aboutMe = "I haven't added an about me yet!";
-        let course = "Computer Science";
-        let year = 1;
+        let course = "I haven't added my course yet!";
+        let year = "I haven't added my year yet!";
         let asked = 0;
         let answered = 0;
         //Create a new user in the user database with the fields from the form, the default profile picture and the generated password hash and salt
-        db.query(
+        db.run(
             SIGN_UP_USER,
             [
                 signUpFirstName,
@@ -386,13 +373,13 @@ app.post("/signin", (req, res) => {
     // pull data from request body for better readbility
     let { email, password } = req.body;
     // search if user exists using email address
-    db.query(FIND_USER, email, (err, userData) => {
+    db.get(FIND_USER, email, (err, userData) => {
         if (err) {
             console.log("error at database");
             res.status(500).send(err);
         }
         //assign any returned rows to user variable
-        let user = userData[0];
+        let user = userData;
         //if a user exists, and their stored password matches the output of the hashing function
         // with their password entry..
         if (
@@ -435,7 +422,7 @@ app.post("/postQuestion", (req, res) => {
     // if relative post is zero, its not a reply
     if (postData.relativePostID === 0) {
         //increment asked by one on account
-        db.query(
+        db.run(
             "UPDATE `users` SET asked = asked + 1 WHERE userID = ?",
             postData.authorID,
             (err) => {
@@ -445,7 +432,7 @@ app.post("/postQuestion", (req, res) => {
             }
         );
     } else {
-        db.query(
+        db.run(
             // otherwise increment answered
             "UPDATE `users` SET `answered` = `answered`+ 1 WHERE `userID` = ?",
             postData.authorID,
@@ -456,7 +443,7 @@ app.post("/postQuestion", (req, res) => {
             }
         );
     }
-    db.query(
+    db.run(
         POST_QUESTION,
         [
             postData.authorID,
@@ -489,7 +476,7 @@ app.post("/getProfile", (req, res) => {
     // set up profileID var from request
     let profileID = req.body.userID;
     // get all relevant user columns by userID
-    db.query(
+    db.all(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
         profileID,
         (err, rows) => {
@@ -515,7 +502,7 @@ app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
     //remove any commas from filename after being processed by multer
     let image = req.body.imageLocations.replace(",", "");
     // update the profilePicture attached to the user where username matches the logged in users from the request
-    db.query(
+    db.run(
         "UPDATE users SET profilePicture = ? WHERE userID = ?",
         [image, req.body.userID],
         (err, result) => {
@@ -526,7 +513,7 @@ app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
                 return;
             }
             // grab users first name and lastname from database by username from request
-            db.query(
+            db.all(
                 "SELECT users.firstName, users.lastName FROM users WHERE userID = ? LIMIT 1",
                 req.body.userID,
                 (err, rows) => {
@@ -538,7 +525,7 @@ app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
                     }
                 }
             );
-            db.query(
+            db.all(
                 "UPDATE posts SET authorProfilePicture = ? WHERE authorID = ?",
                 [image, req.body.userID],
                 (err, rows) => {
@@ -561,7 +548,7 @@ app.post("/updateAboutMe", (req, res) => {
     //pull variables from request body for better readability
     const { aboutMe, userID } = req.body;
     //update users general information in database
-    db.query(UPDATE_USER_ABOUT_ME, [aboutMe, userID], (err) => {
+    db.run(UPDATE_USER_ABOUT_ME, [aboutMe, userID], (err) => {
         if (err) {
             //error response
             res.json("ERROR AT DATABASE");
@@ -578,7 +565,7 @@ app.post("/vote", (req, res) => {
     let postID = req.body.postID;
     //vote up route
     if (vote === "up") {
-        db.query(
+        db.run(
             "UPDATE `posts` SET score = score + 1 WHERE postID = ?",
             postID,
             (err) => {
@@ -589,7 +576,7 @@ app.post("/vote", (req, res) => {
         );
         // vote down route
     } else {
-        db.query(
+        db.run(
             "UPDATE `posts` SET score = score - 1 WHERE postID = ?",
             postID,
             (err) => {
@@ -608,7 +595,7 @@ app.post("/getUserQuestionFeed", (req, res) => {
     // get userID from req
     let userID = req.body.userID;
     //get all posts by userID
-    db.query(
+    db.all(
         "SELECT * FROM `posts` WHERE `authorID` = ?",
         userID,
         (err, rows) => {
@@ -627,7 +614,7 @@ app.post("/search", (req, res) => {
     //set up variables from the request body
     let searchQuery = req.body.search;
     // select firstname, lastname, profile picture and username from any users that part match our search query
-    db.query(SEARCH_TERM, [searchQuery, searchQuery], (err, results) => {
+    db.all(SEARCH_TERM, [searchQuery, searchQuery], (err, results) => {
         // if error
         if (err) {
             console.log(err);
