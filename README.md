@@ -72,7 +72,7 @@ table setup is performed from the endpoints:
 
 #### **posts table** - /postsSetup
 
-These endpoints delete the existing tables and reprovision a new set with the following fields. Dummy data is inserted into the rows to aid development and reduce the amount of times I have to create an account to test functionality.
+These endpoints delete the existing tables and reprovision a new set with the following fields. Dummy data is inserted into the rows to aid development and reduce the amount of times I have to create an account to test functionality. **These dummy-data files can be found in the dummy-data directory in the server root.**
 
 ---
 
@@ -147,3 +147,26 @@ The following is a description of each table, the data types for each row, along
 | 10     | Danny Daley  | 1        | "images/profilePictures/8197.png" | "2022-12-01" | Web          | "Cant center this div!" | "How do I Cen..." | <div margin:center> | HTML         | 3     |
 
 #### **_When items are added to the 'date' column, the Date() built in function is called to properly acheive date formatting_**
+
+## RUNNING THE PROJECT
+
+Opening a terminal in myUni404/client/myUni404 and running ..
+`npm start`
+will start the react development server.
+
+Opening a terminal in myUni404/server and running ..
+`npm start`
+will run the express server, or alternatively..
+``npm run dev`
+to start the server in development mode.
+
+To run the project at deployment, I prefer to log in to the Ubuntu droplet via ssh.
+
+I like to run my projects from the /srv directory..
+`cd /srv/myUni404/server`
+
+run docker-compose build, and start the docker image...
+`docker-compose build && docker-compose up`
+
+or alternatively, run the command and start a daemonised image to run in the background..
+`docker-compose build && docker-compose up -s`
