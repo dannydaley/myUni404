@@ -169,4 +169,4 @@ run docker-compose build, and start the docker image...
 `docker-compose build && docker-compose up`
 
 or alternatively, run the command and start a daemonised image to run in the background..
-`docker-compose build && docker-compose up -s`
+`docker-compose build && docker-compose up -d`
