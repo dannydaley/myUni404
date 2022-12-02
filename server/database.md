@@ -56,7 +56,7 @@ The following is a description of each table, the data types for each row, along
 
 | userID | firstName    | lastName     | password     | passwordSalt     | aboutMe                   | profilePicture  | course       | year | asked | answered |
 | ------ | ------------ | ------------ | ------------ | ---------------- | ------------------------- | --------------- | ------------ | ---- | ----- | -------- |
-| INT    | VARCHAR(255) | VARCHAR(255) | VARCHAR(255) | VARCHAR(255)     | VARCHAR(255)              | VARCHAR(255)    | VARCHAR(255) | INT  | INT   | INT      |
+| INT    | VARCHAR(255) | VARCHAR(255) | VARCHAR(255) | VARCHAR(512)     | VARCHAR(255)              | VARCHAR(255)    | VARCHAR(255) | INT  | INT   | INT      |
 | 1      | Danny        | Daley        | myPassword   | mYhAsHeDpAsSwOrD | This is my about me text! | Web Development | 3            | 1    | 4     | 2        |
 
 ---
