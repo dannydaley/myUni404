@@ -42,6 +42,10 @@ SQLite3 database set up in server.js under the variable **SQLdatabase**, table s
 
 #### |`answered` INT|
 
+| userID | firstName | lastName | password   | passwordSalt     | aboutMe                   | profilePicture  | course | year | asked | answered |
+| ------ | --------- | -------- | ---------- | ---------------- | ------------------------- | --------------- | ------ | ---- | ----- | -------- |
+| 1      | Danny     | Daley    | myPassword | mYhAsHeDpAsSwOrD | This is my about me text! | Web Development | 3      | 1    | 4     |
+
 ---
 
 ### TABLE: posts
