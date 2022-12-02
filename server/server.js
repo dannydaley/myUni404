@@ -63,8 +63,6 @@ db.connect(function (err) {
     console.log("Database Connected!");
 });
 
-let db = new sqlite3.Database("./SQLite3.db");
-
 app.locals.db = db;
 
 let userDataJSON = require("./dummy-data/users.json");
