@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { Link, useNavigate } from "react-router-dom";
 
 function SignUpForm(props) {
     let signUpEmail;
@@ -48,13 +47,7 @@ function SignUpForm(props) {
             }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    // this.props.updateSession(data.firstName, data.lastName, data.username, data.profilePicture);
-                    props.changeRoute("signin");
-                }
-            });
-        // .then(this.props.onRouteChange('signin'))
+            .then((data) => props.changeRoute("signin"));
     };
 
     return (
@@ -129,19 +122,18 @@ function SignUpForm(props) {
                         onChange={onPasswordConfirmChange}
                         style={{ backgroundColor: "white" }}
                     />
-                    <Link to="/signin" style={{ textDecoration: "none" }}>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                width: "33ch",
-                                backgroundColor: "#292929",
-                                "&:hover": { backgroundColor: "gray" },
-                            }}
-                            onClick={() => onSubmitSignUp()}
-                        >
-                            Sign Up
-                        </Button>
-                    </Link>
+
+                    <Button
+                        variant="contained"
+                        sx={{
+                            width: "33ch",
+                            backgroundColor: "#292929",
+                            "&:hover": { backgroundColor: "gray" },
+                        }}
+                        onClick={() => onSubmitSignUp()}
+                    >
+                        Sign Up
+                    </Button>
                 </form>
                 <Divider
                     variant="middle"

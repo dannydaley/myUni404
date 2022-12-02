@@ -40,13 +40,12 @@ export default class CreateReply extends React.Component {
     //handle form submit
     submitAnswer = () => {
         if (
-            this.state.text.length < 20 ||
+            this.state.text.length < 10 ||
             this.state.category === "none" ||
             this.state.title === "none"
         ) {
             this.setState({ shortSubmit: true });
         } else {
-            console.log(this.props.userProfilePicture);
             fetch(process.env.REACT_APP_SERVER + "/postQuestion", {
                 method: "post",
                 headers: { "Content-Type": "application/json" },

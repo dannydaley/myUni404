@@ -5,7 +5,7 @@ const cors = require("cors");
 var bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
-
+require("dotenv").config();
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
 
@@ -17,11 +17,11 @@ app.get("/", function (req, res) {
 
 //#region IMAGES AND IMAGE UPLOAD HANDLING
 
-// default profile picture applied to all users profilePicture field in the users table of the db on account creation
-
 //set up multer middleware for image uploads
 var multer = require("multer");
 
+// default profile picture applied to all users profilePicture field in the users table of the db on account creation
+let defaultProfilePicture = "images/defaultUser.png";
 // set up storage for file uploads
 const storage = multer.diskStorage({
     // set destination to public image directory
@@ -124,6 +124,10 @@ const POST_QUESTION =
     "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, authorProfilePicture, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?, ?)";
 
 const UPDATE_USER_ABOUT_ME = "UPDATE users SET aboutMe = ? WHERE userID= ?";
+
+// const SEARCH_TERM = 'SELECT * FROM posts WHERE title LIKE "%?%" LIMIT 10';
+const SEARCH_TERM =
+    "SELECT *  FROM posts WHERE title LIKE '%' || ? || '%' OR text LIKE ? || '%'";
 //#endregion SQL QUERIES
 
 //#region DATABASE SETUP ENDPOINTS
@@ -289,8 +293,6 @@ app.post("/getQuestionReplies", (req, res, next) => {
     });
 });
 
-app.post("/getSession", (req, res) => {});
-
 app.post("/signUp", (req, res) => {
     //set up variables from the request for better readability
     let {
@@ -307,7 +309,7 @@ app.post("/signUp", (req, res) => {
         //generate password to store, using password from the confirm field, and the generated salt
         let storePassword = passwordHash(confirmSignUpPassword, passwordSalt);
         //assign default profile picture
-        let profilePicture = "UPDATE THIS WITH PROFILE PICTURE LOCATION";
+        let profilePicture = defaultProfilePicture;
         //assign other values
         let aboutMe = "I haven't added an about me yet!";
         let course = "I haven't added my course yet!";
@@ -405,8 +407,11 @@ app.post("/signin", (req, res) => {
 });
 
 app.post("/postQuestion", (req, res) => {
+    // set up post data from request
     let postData = req.body;
+    // if relative post is zero, its not a reply
     if (postData.relativePostID === 0) {
+        //increment asked by one on account
         db.run(
             "UPDATE `users` SET asked = asked + 1 WHERE userID = ?",
             postData.authorID,
@@ -418,6 +423,7 @@ app.post("/postQuestion", (req, res) => {
         );
     } else {
         db.run(
+            // otherwise increment answered
             "UPDATE `users` SET `answered` = `answered`+ 1 WHERE `userID` = ?",
             postData.authorID,
             (err) => {
@@ -457,7 +463,9 @@ app.post("/postQuestion", (req, res) => {
 });
 
 app.post("/getProfile", (req, res) => {
-    profileID = req.body.userID;
+    // set up profileID var from request
+    let profileID = req.body.userID;
+    // get all relevant user columns by userID
     db.all(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
         profileID,
@@ -541,8 +549,11 @@ app.post("/updateAboutMe", (req, res) => {
 });
 
 app.post("/vote", (req, res) => {
+    // get the vote status from request
     let vote = req.body.vote;
+    // get post to apply vote to
     let postID = req.body.postID;
+    //vote up route
     if (vote === "up") {
         db.run(
             "UPDATE `posts` SET score = score + 1 WHERE postID = ?",
@@ -553,6 +564,7 @@ app.post("/vote", (req, res) => {
                 }
             }
         );
+        // vote down route
     } else {
         db.run(
             "UPDATE `posts` SET score = score - 1 WHERE postID = ?",
@@ -570,7 +582,9 @@ app.post("/vote", (req, res) => {
 });
 
 app.post("/getUserQuestionFeed", (req, res) => {
+    // get userID from req
     let userID = req.body.userID;
+    //get all posts by userID
     db.all(
         "SELECT * FROM `posts` WHERE `authorID` = ?",
         userID,
@@ -586,6 +600,26 @@ app.post("/getUserQuestionFeed", (req, res) => {
     );
 });
 
-app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+app.post("/search", (req, res) => {
+    //set up variables from the request body
+    let searchQuery = req.body.search;
+    // select firstname, lastname, profile picture and username from any users that part match our search query
+    db.all(SEARCH_TERM, [searchQuery, searchQuery], (err, results) => {
+        // if error
+        if (err) {
+            console.log(err);
+            console.log(err.message);
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with results on success
+        res.json({
+            status: "success",
+            results: results,
+        });
+    });
 });
+
+app.listen(process.env.PORT);
+console.log("server.js running on port " + process.env.PORT);

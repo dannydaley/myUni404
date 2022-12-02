@@ -8,10 +8,6 @@ import { Divider } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 
 export default class Question extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     goToQuestion = (
         authorProfilePicture,
         title,
@@ -35,7 +31,6 @@ export default class Question extends React.Component {
         this.props.changeRoute("question");
     };
     render() {
-        console.log(this.props.authorID);
         return (
             <div style={{ marginBottom: "10px" }}>
                 <Card sx={{ minWidth: 275 }}>

@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import CodeBlock from "../CodeBlock";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { renderMatches } from "react-router-dom";
 
 export default class Answer extends React.Component {
     constructor(props) {
@@ -19,7 +18,6 @@ export default class Answer extends React.Component {
 
     votePost = async (vote) => {
         if (this.state.votingOpen) {
-            // this.setState({ settings: newSettings })
             //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
             fetch(process.env.REACT_APP_SERVER + "/vote", {
                 method: "post",
@@ -31,16 +29,14 @@ export default class Answer extends React.Component {
             })
                 //TURN THE RESPONSE INTO A JSON OBJECT
                 .then((response) => response.json())
-                // .then(await this.delayFunction())
-                // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
                 .then((data) => {
                     vote === "up"
                         ? this.setState({
-                              score: (this.state.score += 1),
+                              score: this.state.score + 1,
                               votingOpen: false,
                           })
                         : this.setState({
-                              score: (this.state.score -= 1),
+                              score: this.state.score - 1,
                               votingOpen: false,
                           });
                 });
@@ -60,23 +56,6 @@ export default class Answer extends React.Component {
                                 alignItems: "baseline",
                             }}
                         >
-                            {/* <img
-                                alt=""
-                                src={
-                                    process.env.REACT_APP_SERVER +
-                                    "/public/" +
-                                    this.props.authorProfilePicture
-                                }
-                                style={{
-                                    border: "1px solid gray",
-                                    width: "60px",
-                                    height: "60px",
-                                    borderRadius: "50%",
-                                }}
-                                onClick={() =>
-                                    
-                                }
-                            /> */}
                             <div
                                 style={{
                                     backgroundImage:

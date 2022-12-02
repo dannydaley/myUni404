@@ -2,10 +2,8 @@ import React from "react";
 import "./index.css";
 import HomePage from "./Pages/HomePage";
 import SignInPage from "./Pages/SignInPage";
-import NavBar from "./Components/Home/NavBar";
-import { createBrowserRouter, Route, Routes } from "react-router-dom";
-import SignInForm from "./Components/SignIn/SignInForm";
-import SignUpForm from "./Components/SignIn/SignUp";
+
+import { Route, Routes } from "react-router-dom";
 
 class App extends React.Component {
     constructor(props) {
@@ -52,42 +50,11 @@ class App extends React.Component {
         this.setState({ userProfilePicture: newLocation });
     postInfo = (postDataIn) => (this.postData = postDataIn);
 
-    router = createBrowserRouter([
-        {
-            path: "",
-            element: <SignInPage />,
-            children: [
-                {
-                    path: "",
-                    element: <SignInForm />,
-                },
-                {
-                    path: "/",
-                    element: <SignInForm />,
-                },
-                {
-                    path: "signin",
-                    element: <SignInForm />,
-                },
-                {
-                    path: "signup",
-                    element: <SignUpForm />,
-                },
-            ],
-        },
-        {
-            path: "/home",
-            element: <HomePage />,
-            children: [],
-        },
-    ]);
-
     render() {
         return (
             <div className="App">
                 {this.state.isSignedIn ? (
                     <>
-                        <NavBar />
                         <Routes>
                             <Route
                                 path="/"

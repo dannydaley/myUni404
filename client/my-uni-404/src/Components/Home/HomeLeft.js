@@ -112,6 +112,7 @@ export default function HomeLeft(props) {
             <a
                 href="https://falmouth.myday.cloud/dashboard/home"
                 target={"_blank"}
+                rel="noreferrer"
                 style={{
                     justifySelf: "flex-end",
                     alignSelf: "flex-end",

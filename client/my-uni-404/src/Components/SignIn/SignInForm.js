@@ -5,14 +5,12 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { Link, Navigate, Router, useNavigate } from "react-router-dom";
 
 function SignInForm(props) {
     let signInEmail;
 
     let signInPassword;
 
-    const navigate = useNavigate();
     //Function controls email in field added to state
     const onEmailChange = (event) => {
         signInEmail = event.target.value;

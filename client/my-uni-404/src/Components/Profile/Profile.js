@@ -29,7 +29,6 @@ class Profile extends React.Component {
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 this.setState({ feedData: data.postData });
             });
     };

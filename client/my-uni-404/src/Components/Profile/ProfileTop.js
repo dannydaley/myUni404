@@ -23,7 +23,6 @@ class ProfileTop extends React.Component {
 
     componentDidMount = async () => {
         this.setState({ contentLoaded: false });
-        // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
         fetch(process.env.REACT_APP_SERVER + "/getProfile", {
             method: "post",
@@ -87,7 +86,6 @@ class ProfileTop extends React.Component {
         })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
-            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
                 this.setState({
                     aboutMe: this.state.updateAboutMe,

@@ -30,7 +30,7 @@ export default class AskQuestion extends React.Component {
     //Function controls logging in and updates the session on success.
     submitQuestion = () => {
         if (
-            this.state.text.length < 50 ||
+            this.state.text.length < 20 ||
             this.state.category === "none" ||
             this.state.title === "none"
         ) {

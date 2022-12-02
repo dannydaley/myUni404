@@ -27,7 +27,6 @@ export default class FullQuestion extends React.Component {
 
     componentDidMount = async () => {
         this.setState({ contentLoaded: false });
-        // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
         fetch(process.env.REACT_APP_SERVER + "/getQuestionReplies", {
             method: "post",
@@ -38,14 +37,10 @@ export default class FullQuestion extends React.Component {
         })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
-            // .then(await this.delayFunction())
-            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
-                console.log(data);
                 this.setState({ replyData: data });
                 this.setState({ contentLoaded: true });
             });
-        console.log(this.state.replyData);
     };
 
     refreshQuestion = () => {
@@ -53,7 +48,6 @@ export default class FullQuestion extends React.Component {
     };
 
     render() {
-        console.log(this.props);
         if (!this.state.contentLoaded) {
             return (
                 <div style={{ margin: "20px 0" }}>
