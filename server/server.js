@@ -1,3 +1,5 @@
+// FOR MYSQL CONVERSION FROM SQLITE 3, DB QUERIES CHANGE FROM .RUN, .GET , .SERIALIZE ETC TO .QUERY
+//  CHANGES IN TABLE CREATION: AUTOINCREMENT BECOMES AUTO_INCREMENT
 const express = require("express");
 const app = express();
 const port = 3001;
@@ -5,7 +7,7 @@ const cors = require("cors");
 var bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
-
+require("dotenv").config();
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
 
@@ -15,10 +17,51 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-// var sqlite3 = require("sqlite3").verbose();
-var sqlite3 = require("sqlite3").verbose();
+//#region IMAGES AND IMAGE UPLOAD HANDLING
 
-let db = new sqlite3.Database("./SQLite3.db");
+//set up multer middleware for image uploads
+var multer = require("multer");
+
+// default profile picture applied to all users profilePicture field in the users table of the db on account creation
+let defaultProfilePicture = "images/defaultUser.png";
+// set up storage for file uploads
+const storage = multer.diskStorage({
+    // set destination to public image directory
+    destination: "public/images/profilePictures",
+    filename: function (req, file, cb) {
+        // create a unique suffix so that image names will never have a duplicate
+        //suffix consists of the date, a hyphen and then a large random number
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, "IMAGE-" + uniqueSuffix + ".png");
+        // generate the file name of the file to be added to the public image directory
+        // filename contains path to folder to make things easier across the server
+        // we append .png top the filename so that files are recognised as their format
+        let fileName =
+            "images/profilePictures/" + "IMAGE-" + uniqueSuffix + ".png";
+        // update the string attached to the incoming req.body.image field
+        // this is added to the database as the imageLocation
+        req.body.imageLocations += fileName + ",";
+    },
+});
+// set up multer function to be called on uploads
+let upload = multer({ storage: storage });
+
+//#endregion IMAGES AND IMAGE UPLOAD HANDLING
+
+let mysql = require("mysql");
+
+var db = mysql.createConnection({
+    host: process.env.DATABASEHOST,
+    port: process.env.DATABASEPORT,
+    user: process.env.DATABASEUSER,
+    password: process.env.DATABASEPASSWORD,
+    database: process.env.DATABASENAME,
+});
+
+db.connect(function (err) {
+    if (err) throw err;
+    console.log("Database Connected!");
+});
 
 app.locals.db = db;
 
@@ -78,18 +121,41 @@ function passwordHash(thePassword, theSalt) {
 
 //#endregion SECURITY
 
+//#region SQL QUERIES
+
+const GET_ALL_USERS = "SELECT * FROM users";
+const FIND_USER = "SELECT * FROM users WHERE email = ?";
+const SIGN_UP_USER =
+    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
+const GET_QUESTION_FEED =
+    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?) ORDER BY postID DESC";
+const GET_QUESTION_REPLIES =
+    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
+const POST_QUESTION =
+    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, authorProfilePicture, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?, ?)";
+
+const UPDATE_USER_ABOUT_ME = "UPDATE users SET aboutMe = ? WHERE userID= ?";
+
+// const SEARCH_TERM = 'SELECT * FROM posts WHERE title LIKE "%?%" LIMIT 10';
+const SEARCH_TERM =
+    "SELECT *  FROM posts WHERE title LIKE '%' || ? || '%' OR text LIKE ? || '%'";
+//#endregion SQL QUERIES
+
+//#region DATABASE SETUP ENDPOINTS
+
 app.get("/usersSetup", (req, res) => {
-    db.serialize(() => {
+    db.query(() => {
         // delete any existing user table
-        db.run("DROP TABLE IF EXISTS `users`"),
+        db.query("DROP TABLE IF EXISTS `users`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.run(
-            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTOINCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
+        db.query(
+            "CREATE TABLE `users` (userID INTEGER PRIMARY KEY AUTO_INCREMENT, firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER)",
             // , firstName varchar(255), lastName varchar(255), email varchar(255) UNIQUE, password varchar(255), passwordSalt varchar(255), aboutMe varchar(255), course varchar(255), year INTEGER, profilePicture varchar(255), asked INTEGER, answered INTEGER'
             (err) => {
                 if (err) {
@@ -99,7 +165,7 @@ app.get("/usersSetup", (req, res) => {
         );
         let users = userDataJSON.entries;
         users.forEach((user) => {
-            db.run(
+            db.query(
                 "INSERT INTO users (firstName, lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -128,45 +194,18 @@ app.get("/usersSetup", (req, res) => {
     res.send("Users table setup complete");
 });
 
-const GET_ALL_USERS = "SELECT * FROM users";
-const FIND_USER = "SELECT * FROM users WHERE email = ?";
-const SIGN_UP_USER =
-    "INSERT INTO users (firstName,lastName, email, password, passwordSalt, aboutMe, course, year, profilePicture, asked, answered) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-const GET_ALL_POSTS = "SELECT * FROM POSTS ORDER BY postID DESC";
-const GET_QUESTION_FEED =
-    "SELECT * FROM POSTS WHERE (title != ?) AND (category = ?)";
-const GET_QUESTION_REPLIES =
-    "SELECT * FROM POSTS WHERE relativePostID = ? ORDER BY score DESC";
-const POST_QUESTION =
-    "INSERT INTO posts (authorID, author, relativePostID, date, title, text, code, language, category, score) VALUES (?, ?, ?, date(), ?, ?, ?, ?, ?, ?)";
-
-// get all users
-app.get("/getAllUsers", (req, res, next) => {
-    // grab all user data
-    db.all(GET_ALL_USERS, [], (err, userData) => {
-        // if error
-        if (err) {
-            // respond with error status and error message
-            res.status(500).send(err.message);
-            return;
-        }
-        // respond with userData on success
-        res.send(userData);
-    });
-});
-
 app.get("/postsSetup", (req, res) => {
-    db.serialize(() => {
+    db.query(() => {
         // delete any existing user table
-        db.run("DROP TABLE IF EXISTS `posts`"),
+        db.query("DROP TABLE IF EXISTS `posts`"),
             (err) => {
                 if (err) {
                     console.log(err.message);
                 }
             };
         //rebuild the users table
-        db.run(
-            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTOINCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
+        db.query(
+            "CREATE TABLE `posts` (postID INTEGER PRIMARY KEY AUTO_INCREMENT, author varchar(255), authorID INTEGER, authorProfilePicture VARCHAR(255), date varchar(255), category varchar(255), score INTEGER, relativePostID INTEGER, title varchar(255), text TEXT, code TEXT, language varchar(255))",
             (err) => {
                 if (err) {
                     console.log(err.message);
@@ -175,7 +214,7 @@ app.get("/postsSetup", (req, res) => {
         );
         let posts = postDataJSON.entries;
         posts.forEach((post) => {
-            db.run(
+            db.query(
                 "INSERT INTO posts (author, authorID, authorProfilePicture, date, category, score, relativePostID, title, text, code, language) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 // pass in values from the json objects
                 [
@@ -202,11 +241,24 @@ app.get("/postsSetup", (req, res) => {
     console.log("posts table set up complete");
     res.send("Posts table setup complete");
 });
-
+// get all users
+app.get("/getAllUsers", (req, res, next) => {
+    // grab all user data
+    db.query(GET_ALL_USERS, [], (err, userData) => {
+        // if error
+        if (err) {
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with userData on success
+        res.send(userData);
+    });
+});
 // get all users
 app.get("/getAllPosts", (req, res, next) => {
     // grab all user data
-    db.all(GET_ALL_POSTS, [], (err, postData) => {
+    db.query(GET_ALL_POSTS, [], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -218,13 +270,14 @@ app.get("/getAllPosts", (req, res, next) => {
     });
 });
 
-// get all users
+//#endregion DATABASE SETUP ENDPOINTS
+
 app.post("/getQuestionFeed", (req, res, next) => {
     // grab all user data
     //dont include 'reply' as title to not pull replies
     let dontInclude = "reply";
     let category = req.body.feed;
-    db.all(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
+    db.query(GET_QUESTION_FEED, [dontInclude, category], (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -236,12 +289,11 @@ app.post("/getQuestionFeed", (req, res, next) => {
     });
 });
 
-// get all users
 app.post("/getQuestionReplies", (req, res, next) => {
     // grab all user data
 
     let relativePostID = req.body.postID;
-    db.all(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
+    db.query(GET_QUESTION_REPLIES, relativePostID, (err, postData) => {
         // if error
         if (err) {
             // respond with error status and error message
@@ -252,12 +304,6 @@ app.post("/getQuestionReplies", (req, res, next) => {
         res.json(postData);
     });
 });
-
-app.get("/", (req, res) => {
-    res.send(`Server is running on port ${port}`);
-});
-
-app.post("/getSession", (req, res) => {});
 
 app.post("/signUp", (req, res) => {
     //set up variables from the request for better readability
@@ -275,7 +321,7 @@ app.post("/signUp", (req, res) => {
         //generate password to store, using password from the confirm field, and the generated salt
         let storePassword = passwordHash(confirmSignUpPassword, passwordSalt);
         //assign default profile picture
-        let profilePicture = "UPDATE THIS WITH PROFILE PICTURE LOCATION";
+        let profilePicture = defaultProfilePicture;
         //assign other values
         let aboutMe = "I haven't added an about me yet!";
         let course = "I haven't added my course yet!";
@@ -283,7 +329,7 @@ app.post("/signUp", (req, res) => {
         let asked = 0;
         let answered = 0;
         //Create a new user in the user database with the fields from the form, the default profile picture and the generated password hash and salt
-        db.run(
+        db.query(
             SIGN_UP_USER,
             [
                 signUpFirstName,
@@ -329,7 +375,7 @@ app.post("/signin", (req, res) => {
     // pull data from request body for better readbility
     let { email, password } = req.body;
     // search if user exists using email address
-    db.get(FIND_USER, email, (err, userData) => {
+    db.query(FIND_USER, email, (err, userData) => {
         if (err) {
             console.log("error at database");
             res.status(500).send(err);
@@ -373,9 +419,33 @@ app.post("/signin", (req, res) => {
 });
 
 app.post("/postQuestion", (req, res) => {
+    // set up post data from request
     let postData = req.body;
-    console.log(req.body);
-    db.run(
+    // if relative post is zero, its not a reply
+    if (postData.relativePostID === 0) {
+        //increment asked by one on account
+        db.query(
+            "UPDATE `users` SET asked = asked + 1 WHERE userID = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } else {
+        db.query(
+            // otherwise increment answered
+            "UPDATE `users` SET `answered` = `answered`+ 1 WHERE `userID` = ?",
+            postData.authorID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    }
+    db.query(
         POST_QUESTION,
         [
             postData.authorID,
@@ -386,10 +456,10 @@ app.post("/postQuestion", (req, res) => {
             postData.code,
             postData.language,
             postData.category,
+            postData.authorProfilePicture,
             0,
         ],
         (err, rows) => {
-            console.log;
             if (err) {
                 console.log("failed to add post to database");
                 console.log(err.message);
@@ -405,9 +475,10 @@ app.post("/postQuestion", (req, res) => {
 });
 
 app.post("/getProfile", (req, res) => {
-    console.log(req.body);
-    profileID = req.body.userID;
-    db.all(
+    // set up profileID var from request
+    let profileID = req.body.userID;
+    // get all relevant user columns by userID
+    db.query(
         "SELECT firstName,lastName, aboutMe, course, year, profilePicture, asked, answered FROM `users` WHERE userID = ?",
         profileID,
         (err, rows) => {
@@ -417,7 +488,6 @@ app.post("/getProfile", (req, res) => {
                 res.status(500).send(err.message);
                 return;
             }
-            console.log(rows);
             //respond with success
             res.json({
                 status: "success",
@@ -427,6 +497,141 @@ app.post("/getProfile", (req, res) => {
     );
 });
 
-app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+app.post("/changeProfilePicture", upload.single("image"), (req, res) => {
+    /*ALREADY RUN THROUGH MULTER*/
+    //remove undefined from filename after being processed by multer
+    req.body.imageLocations = req.body.imageLocations.replace("undefined", "");
+    //remove any commas from filename after being processed by multer
+    let image = req.body.imageLocations.replace(",", "");
+    // update the profilePicture attached to the user where username matches the logged in users from the request
+    db.query(
+        "UPDATE users SET profilePicture = ? WHERE userID = ?",
+        [image, req.body.userID],
+        (err, result) => {
+            // if error
+            if (err) {
+                // respond with error status and error message
+                res.status(500).send(err.message);
+                return;
+            }
+            // grab users first name and lastname from database by username from request
+            db.query(
+                "SELECT users.firstName, users.lastName FROM users WHERE userID = ? LIMIT 1",
+                req.body.userID,
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+            db.query(
+                "UPDATE posts SET authorProfilePicture = ? WHERE authorID = ?",
+                [image, req.body.userID],
+                (err, rows) => {
+                    // if error
+                    if (err) {
+                        // respond with error status and error message
+                        res.status(500).send(err.message);
+                        return;
+                    }
+                }
+            );
+        }
+    );
+    res.json({
+        profilePicture: image,
+    });
 });
+
+app.post("/updateAboutMe", (req, res) => {
+    //pull variables from request body for better readability
+    const { aboutMe, userID } = req.body;
+    //update users general information in database
+    db.query(UPDATE_USER_ABOUT_ME, [aboutMe, userID], (err) => {
+        if (err) {
+            //error response
+            res.json("ERROR AT DATABASE");
+        }
+        //success response
+        res.json("success at database");
+    });
+});
+
+app.post("/vote", (req, res) => {
+    // get the vote status from request
+    let vote = req.body.vote;
+    // get post to apply vote to
+    let postID = req.body.postID;
+    //vote up route
+    if (vote === "up") {
+        db.query(
+            "UPDATE `posts` SET score = score + 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+        // vote down route
+    } else {
+        db.query(
+            "UPDATE `posts` SET score = score - 1 WHERE postID = ?",
+            postID,
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                }
+            }
+        );
+    } //respond with success
+    res.json({
+        status: "success",
+    });
+});
+
+app.post("/getUserQuestionFeed", (req, res) => {
+    // get userID from req
+    let userID = req.body.userID;
+    //get all posts by userID
+    db.query(
+        "SELECT * FROM `posts` WHERE `authorID` = ?",
+        userID,
+        (err, rows) => {
+            if (err) {
+                console.log(err.message);
+            }
+            res.json({
+                status: "success",
+                postData: rows,
+            });
+        }
+    );
+});
+
+app.post("/search", (req, res) => {
+    //set up variables from the request body
+    let searchQuery = req.body.search;
+    // select firstname, lastname, profile picture and username from any users that part match our search query
+    db.query(SEARCH_TERM, [searchQuery, searchQuery], (err, results) => {
+        // if error
+        if (err) {
+            console.log(err);
+            console.log(err.message);
+            // respond with error status and error message
+            res.status(500).send(err.message);
+            return;
+        }
+        // respond with results on success
+        res.json({
+            status: "success",
+            results: results,
+        });
+    });
+});
+
+app.listen(process.env.PORT);
+console.log("server.js running on port " + process.env.PORT);

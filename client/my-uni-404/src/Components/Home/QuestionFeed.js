@@ -28,17 +28,18 @@ class QuestionFeed extends React.Component {
             // .then(await this.delayFunction())
             // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
-                console.log(data);
                 this.setState({ feedData: data });
             });
     };
 
+    key = 0;
     render() {
         return (
             <div style={{ padding: "20px", margin: "0 auto" }}>
                 {this.state.feedData.length > 0 ? (
                     this.state.feedData.map((item) => (
                         <QuestionCard
+                            key={this.key++}
                             userID={this.props.userID}
                             userData={this.props.userData}
                             readyQuestion={this.props.readyQuestion}

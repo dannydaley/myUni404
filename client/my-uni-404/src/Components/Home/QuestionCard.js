@@ -8,10 +8,6 @@ import { Divider } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 
 export default class Question extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     goToQuestion = (
         authorProfilePicture,
         title,
@@ -46,23 +42,26 @@ export default class Question extends React.Component {
                                 alignItems: "top",
                             }}
                         >
-                            <img
-                                src={
-                                    process.env.REACT_APP_SERVER +
-                                    "/public/" +
-                                    this.props.authorProfilePicture
-                                }
-                                alt=""
+                            <div
                                 style={{
-                                    border: "1px solid gray",
-                                    width: "50px",
+                                    backgroundImage:
+                                        "url(" +
+                                        process.env.REACT_APP_SERVER +
+                                        "/public/" +
+                                        this.props.authorProfilePicture +
+                                        ")",
+                                    backgroundSize: "cover",
+                                    minWidth: "50px",
                                     height: "50px",
+                                    marginBottom: "50px",
+                                    border: "1px solid gray",
                                     borderRadius: "50%",
                                 }}
                                 onClick={() =>
                                     this.props.viewProfile(this.props.authorID)
                                 }
-                            />
+                            ></div>
+
                             <Typography
                                 sx={{
                                     fontSize: 15,

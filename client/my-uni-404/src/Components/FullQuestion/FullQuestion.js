@@ -27,7 +27,6 @@ export default class FullQuestion extends React.Component {
 
     componentDidMount = async () => {
         this.setState({ contentLoaded: false });
-        // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
         fetch(process.env.REACT_APP_SERVER + "/getQuestionReplies", {
             method: "post",
@@ -38,8 +37,6 @@ export default class FullQuestion extends React.Component {
         })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
-            // .then(await this.delayFunction())
-            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
                 this.setState({ replyData: data });
                 this.setState({ contentLoaded: true });
@@ -63,25 +60,26 @@ export default class FullQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt=""
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.authorProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.authorProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
                                     onClick={() =>
                                         this.props.viewProfile(
-                                            this.props.userID
+                                            this.props.authorID
                                         )
                                     }
-                                />
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"
@@ -152,25 +150,26 @@ export default class FullQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt=""
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.authorProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.authorProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
                                     onClick={() =>
                                         this.props.viewProfile(
-                                            this.props.viewProfile
+                                            this.props.authorID
                                         )
                                     }
-                                />
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"
@@ -239,6 +238,7 @@ export default class FullQuestion extends React.Component {
                             {this.state.replyData.map((item) => (
                                 <>
                                     <Answer
+                                        postID={item.postID}
                                         viewProfile={this.props.viewProfile}
                                         authorID={item.authorID}
                                         author={item.author}

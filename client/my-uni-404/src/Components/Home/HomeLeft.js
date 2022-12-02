@@ -2,7 +2,6 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 
 export default function HomeLeft(props) {
     return (
@@ -21,22 +20,23 @@ export default function HomeLeft(props) {
                 top: 0,
             }}
         >
-            <img
-                alt=""
-                src={
-                    process.env.REACT_APP_SERVER +
-                    "/public/" +
-                    props.userData.userProfilePicture
-                }
+            <div
                 onClick={() => props.changeRoute("myProfile")}
                 style={{
-                    width: "120px",
+                    backgroundImage:
+                        "url(" +
+                        process.env.REACT_APP_SERVER +
+                        "/public/" +
+                        props.userData.userProfilePicture +
+                        ")",
+                    backgroundSize: "cover",
+                    minWidth: "120px",
                     height: "120px",
                     marginBottom: "50px",
                     border: "1px solid gray",
                     borderRadius: "50%",
                 }}
-            />
+            ></div>
             <Button
                 variant="contained"
                 sx={{
@@ -112,6 +112,7 @@ export default function HomeLeft(props) {
             <a
                 href="https://falmouth.myday.cloud/dashboard/home"
                 target={"_blank"}
+                rel="noreferrer"
                 style={{
                     justifySelf: "flex-end",
                     alignSelf: "flex-end",

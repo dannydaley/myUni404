@@ -30,7 +30,7 @@ export default class AskQuestion extends React.Component {
     //Function controls logging in and updates the session on success.
     submitQuestion = () => {
         if (
-            this.state.text.length < 50 ||
+            this.state.text.length < 20 ||
             this.state.category === "none" ||
             this.state.title === "none"
         ) {
@@ -48,12 +48,14 @@ export default class AskQuestion extends React.Component {
                     relativePostID: 0,
                     language: this.state.language,
                     category: this.state.category,
+                    authorProfilePicture:
+                        this.props.userData.userProfilePicture,
                 }),
             })
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.status === "success") {
-                        this.props.changeRoute("feed");
+                        this.props.changeFeed(10, this.state.category);
                     }
                 });
         }
@@ -72,20 +74,27 @@ export default class AskQuestion extends React.Component {
                                     alignItems: "baseline",
                                 }}
                             >
-                                <img
-                                    alt="user profile pic"
-                                    src={
-                                        process.env.REACT_APP_SERVER +
-                                        "/public/" +
-                                        this.props.userData.userProfilePicture
-                                    }
+                                <div
                                     style={{
-                                        border: "1px solid gray",
-                                        width: "60px",
+                                        backgroundImage:
+                                            "url(" +
+                                            process.env.REACT_APP_SERVER +
+                                            "/public/" +
+                                            this.props.userData
+                                                .userProfilePicture +
+                                            ")",
+                                        backgroundSize: "cover",
+                                        minWidth: "60px",
                                         height: "60px",
+                                        border: "1px solid gray",
                                         borderRadius: "50%",
                                     }}
-                                />
+                                    onClick={() =>
+                                        this.props.viewProfile(
+                                            this.props.authorID
+                                        )
+                                    }
+                                ></div>
                                 <Typography
                                     sx={{ fontSize: 18 }}
                                     color="text.secondary"
@@ -112,16 +121,22 @@ export default class AskQuestion extends React.Component {
                             >
                                 Try to include as much detail as possible
                             </Typography>
-                            <input
-                                onChange={this.onTitleChange}
-                                type="text"
+                            <div
                                 style={{
-                                    height: "40px",
-                                    marginBottom: "10px",
-                                    width: "90%",
+                                    display: "flex",
                                 }}
-                                placeholder="Write a title for your question"
-                            />
+                            >
+                                <input
+                                    onChange={this.onTitleChange}
+                                    type="text"
+                                    style={{
+                                        height: "40px",
+                                        margin: "0 auto 10px",
+                                        width: "90%",
+                                    }}
+                                    placeholder="Write a title for your question"
+                                />
+                            </div>
                             <div
                                 style={{
                                     minHeight: "200px",
@@ -133,7 +148,7 @@ export default class AskQuestion extends React.Component {
                             >
                                 <textarea
                                     placeholder="Write the body of your question here"
-                                    spellcheck="true"
+                                    spellCheck="true"
                                     style={{
                                         width: "90%",
                                         minHeight: "200px",
@@ -201,10 +216,11 @@ export default class AskQuestion extends React.Component {
                         ) : (
                             ""
                         )}
-                        <div style={{ padding: "0 20px" }}>
+                        <div style={{ padding: "0 20px", display: "flex" }}>
                             <Button
                                 variant="contained"
                                 onClick={this.submitQuestion}
+                                style={{ margin: "0 auto" }}
                             >
                                 Submit Question
                             </Button>

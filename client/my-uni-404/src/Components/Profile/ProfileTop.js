@@ -1,4 +1,6 @@
 import React from "react";
+import { Button } from "@mui/material";
+import axios from "axios";
 
 class ProfileTop extends React.Component {
     constructor(props) {
@@ -6,9 +8,7 @@ class ProfileTop extends React.Component {
         this.state = {
             firstName: "",
             lastName: "",
-            userID: 1,
-            firstName: "",
-            lastName: "",
+            userID: this.props.userID,
             email: "",
             aboutMe: "",
             course: "",
@@ -16,12 +16,13 @@ class ProfileTop extends React.Component {
             profilePicture: "",
             asked: 0,
             answered: 0,
+            updateProfile: false,
+            updateAboutMe: "",
         };
     }
 
     componentDidMount = async () => {
         this.setState({ contentLoaded: false });
-        // this.setState({ settings: newSettings })
         //FETCH IS A GET REQUEST BY DEFAULT, POINT IT TO THE ENDPOINT ON THE BACKEND
         fetch(process.env.REACT_APP_SERVER + "/getProfile", {
             method: "post",
@@ -32,8 +33,6 @@ class ProfileTop extends React.Component {
         })
             //TURN THE RESPONSE INTO A JSON OBJECT
             .then((response) => response.json())
-            // .then(await this.delayFunction())
-            // WHAT WE DO WITH THE DATA WE RECEIVE (data => console.log(data)) SHOULD SHOW WHAT WE GET
             .then((data) => {
                 this.setState({
                     firstName: data.userData.firstName,
@@ -50,6 +49,55 @@ class ProfileTop extends React.Component {
             });
     };
 
+    onProfilePictureChange = (event) => {
+        this.updateProfilePicture(event.target.files[0]);
+    };
+    updateProfilePicture = async (image) => {
+        let formData = new FormData();
+        formData.append("image", image);
+        formData.append("uploader", this.state.firstName + this.state.lastName);
+        formData.append("userID", this.props.userID);
+        await axios
+            .post(
+                process.env.REACT_APP_SERVER + "/changeProfilePicture",
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    body: JSON.stringify({
+                        userID: this.props.userID,
+                        name: this.state.firstName + this.state.lastName,
+                    }),
+                }
+            )
+            .then((res) => {
+                this.props.updateProfilePicture(res.data.profilePicture);
+                this.setState({ profilePicture: res.data.profilePicture });
+            });
+    };
+
+    updateAboutMe = async () => {
+        fetch(process.env.REACT_APP_SERVER + "/updateAboutMe", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userID: this.props.userID,
+                aboutMe: this.state.updateAboutMe,
+            }),
+        })
+            //TURN THE RESPONSE INTO A JSON OBJECT
+            .then((response) => response.json())
+            .then((data) => {
+                this.setState({
+                    aboutMe: this.state.updateAboutMe,
+                    updateProfile: false,
+                });
+            });
+    };
+
+    onAboutMeChange = (event) =>
+        this.setState({ updateAboutMe: event.target.value });
+
+    updateProfile = () => this.setState({ updateProfile: true });
     render() {
         return (
             <div
@@ -66,21 +114,55 @@ class ProfileTop extends React.Component {
                         flexWrap: "wrap",
                     }}
                 >
-                    <img
-                        alt="User profile-pic"
-                        src={
-                            process.env.REACT_APP_SERVER +
-                            "/public/" +
-                            this.state.profilePicture
-                        }
+                    <div
                         style={{
-                            minWidth: "120px",
-                            height: "120px",
-                            margin: "20px 50px 50px 0",
-                            border: "1px solid gray",
-                            borderRadius: "50%",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
-                    />
+                    >
+                        <div
+                            style={{
+                                backgroundImage:
+                                    "url(" +
+                                    process.env.REACT_APP_SERVER +
+                                    "/public/" +
+                                    this.state.profilePicture +
+                                    ")",
+                                backgroundSize: "cover",
+                                minWidth: "120px",
+                                height: "120px",
+                                margin: "20px auto 0px ",
+                                border: "1px solid gray",
+                                borderRadius: "50%",
+                            }}
+                        ></div>
+                        {this.props.userData.userID === this.props.userID ? (
+                            <div>
+                                <Button
+                                    id="loadFileXml"
+                                    onClick={() =>
+                                        document
+                                            .getElementById("file-input")
+                                            .click()
+                                    }
+                                >
+                                    Change profile picture
+                                </Button>
+                                <input
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    id={"file-input"}
+                                    name="file"
+                                    onChange={this.onProfilePictureChange.bind(
+                                        this
+                                    )}
+                                />
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                    </div>
+
                     <div
                         style={{
                             display: "flex",
@@ -95,15 +177,55 @@ class ProfileTop extends React.Component {
                         </h2>
                         <div
                             style={{
+                                zIndex: "10",
                                 marginTop: "70px",
                                 minWidth: "200px",
                                 maxWidth: "65%",
                                 textAlign: "left",
                             }}
                         >
-                            <h3>{this.state.aboutMe}</h3>
+                            {this.state.updateProfile ? (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <textarea
+                                        style={{
+                                            width: "300px",
+                                            height: "200px",
+                                        }}
+                                        onChange={(event) =>
+                                            this.onAboutMeChange(event)
+                                        }
+                                    >
+                                        {this.state.aboutMe}
+                                    </textarea>
+                                    <Button
+                                        sx={{ margin: "0 auto", width: "100%" }}
+                                        onClick={() => this.updateAboutMe()}
+                                    >
+                                        Submit changes
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div
+                                    style={{
+                                        width: "300px",
+                                        height: "200px",
+                                    }}
+                                >
+                                    <h3>{this.state.aboutMe}</h3>
+                                </div>
+                            )}
                         </div>
-                        <div>
+                        <div
+                            style={{
+                                zIndex: "0",
+                            }}
+                        >
                             <h3>{this.state.course}</h3>
                             <h3>year: {this.state.year}</h3>
                         </div>
@@ -123,6 +245,15 @@ class ProfileTop extends React.Component {
                         </h5>
                     </div>
                 </div>
+                {this.props.userData.userID === this.props.userID ? (
+                    <div>
+                        <Button onClick={() => this.updateProfile()}>
+                            Update profile info
+                        </Button>
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
         );
     }
