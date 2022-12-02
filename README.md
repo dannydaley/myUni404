@@ -4,19 +4,19 @@ myUni404 is a tool for universities with computing programs. The intent is for s
 
 ## Features
 
-View question feed
-Search for question and get relevant hits
-View questions and answers
-write questions
-Write answers
-Vote answers up or down
-Answeres with higher votes are listed above those with less
-Multiple categorys/feeds of questions by field
-User profiles
-view users asked questions
-view users answers
-asked/answered count
-Profile picture and about me updates
+-   View question feed
+-   Search for question and get relevant hits
+-   View questions and answers
+-   write questions
+-   Write answers
+-   Vote answers up or down
+-   Answeres with higher votes are listed above those with less
+-   Multiple categorys/feeds of questions by field
+-   User profiles
+-   view users asked questions
+-   view users answers
+-   asked/answered count
+-   Profile picture and about me updates
 
 ## FRONT END
 
