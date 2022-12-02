@@ -148,6 +148,10 @@ The following is a description of each table, the data types for each row, along
 
 #### **_When items are added to the 'date' column, the Date() built in function is called to properly acheive date formatting_**
 
+## TESTING THE PROJECT
+
+Jest is a JavaScript test runner that lets you access the DOM via jsdom. While jsdom is only an approximation of how the browser works, it is usually good enough for testing React components. Jest provides a great iteration speed combined with powerful features like mocking modules and timers so you can have more control over how the code executes
+
 ## RUNNING THE PROJECT
 
 Opening a terminal in myUni404/client/myUni404 and running ..
